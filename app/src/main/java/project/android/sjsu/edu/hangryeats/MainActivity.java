@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     Button addBtn;
-    Configs configs = new Configs();
+    //Configs configs = new Configs();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,34 +36,70 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                new runStore().execute();
+                new deleteTruck().execute();
 
             }
         });
     }
 
-    private class runStore extends AsyncTask<Void, Integer, Integer>{
+    private class storeTruck extends AsyncTask<Void, Integer, Integer>{
         @Override
         protected Integer doInBackground(Void... params){
-            CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                    getApplicationContext(),
-                    configs.IDENTITY_POOL_ID, // Identity Pool ID
-                    Regions.US_EAST_1 // Region
-            );
 
+            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+            ManagerClass managerClass = new ManagerClass();
+            CognitoCachingCredentialsProvider credentialsProvider = managerClass.getCredentials(MainActivity.this); //Pass in the activity name
             AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
-
             DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
 
-            Truck t1 = new Truck();
-            t1.setID(1);
-            t1.setLat(32.324);
-            t1.setLon(66.241);
-            t1.setName("Best Tacos");
-            mapper.save(t1);
+            //Get values through ID of field or Geo code
+            Truck newTruck = new Truck();
+            newTruck.setID(5);
+            newTruck.setLat(3);
+            newTruck.setLon(4);
+            newTruck.setName("Best Tacos");
+            mapper.save(newTruck);
 
             return null;
         }
     }
 
+    private class updateTruck extends AsyncTask<Void, Integer, Integer>{
+        @Override
+        protected Integer doInBackground(Void... params){
+
+            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+            ManagerClass managerClass = new ManagerClass();
+            CognitoCachingCredentialsProvider credentialsProvider = managerClass.getCredentials(MainActivity.this); //Pass in the activity name
+            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+
+            //Selects a truck based on primary key (id) to update
+            Truck truckToUpdate = mapper.load(Truck.class, 3);
+            truckToUpdate.setName("New truck name");
+
+            mapper.save(truckToUpdate);
+
+            return null;
+        }
+    }
+
+    private class deleteTruck extends AsyncTask<Void, Integer, Integer>{
+        @Override
+        protected Integer doInBackground(Void... params){
+
+            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+            ManagerClass managerClass = new ManagerClass();
+            CognitoCachingCredentialsProvider credentialsProvider = managerClass.getCredentials(MainActivity.this); //Pass in the activity name
+            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+
+            //Selects a truck based on primary key (id) to delete
+            Truck truckToDelete = mapper.load(Truck.class, 6);
+
+            mapper.delete(truckToDelete);
+
+            return null;
+        }
+    }
 }

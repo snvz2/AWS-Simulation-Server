@@ -5,24 +5,26 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
 
 /**
  * Created by danieltam on 3/11/17.
+ * Truck mapper class
  */
 
 @DynamoDBTable(tableName = "Trucks")
 public class Truck {
-    private Number id;
+    private double id;
     private String name;
-    private Number lon;
-    private Number lat;
+    private double lon;
+    private double lat;
 
     @DynamoDBHashKey(attributeName = "id")
-    public Number getID() {
+    public double getID() {
         return id;
     }
 
-    public void setID(Number id) {
+    public void setID(double id) {
         this.id = id;
     }
 
+    @DynamoDBAttribute(attributeName = "name")
     public String getName(){
         return name;
     }
@@ -31,19 +33,21 @@ public class Truck {
         this.name = name;
     }
 
-    public Number getLon() {
+    @DynamoDBAttribute(attributeName = "lon")
+    public double getLon() {
         return lon;
     }
 
-    public void setLon(Number lon) {
+    public void setLon(double lon) {
         this.lon = lon;
     }
 
-    public Number getLat() {
+    @DynamoDBAttribute(attributeName = "lat")
+    public double getLat() {
         return lat;
     }
 
-    public void setLat(Number lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 }

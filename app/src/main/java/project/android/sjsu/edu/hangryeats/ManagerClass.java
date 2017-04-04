@@ -1,5 +1,7 @@
 package project.android.sjsu.edu.hangryeats;
 
+import android.content.Context;
+
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
 
@@ -9,11 +11,16 @@ import com.amazonaws.regions.Regions;
 
 public class ManagerClass {
 
-//    // Initialize the Amazon Cognito credentials provider
-//    CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-//            getApplicationContext(),
-//            "us-east-1:a3817da0-9c99-4fc7-a61a-cc509fb5b8a0", // Identity Pool ID
-//            Regions.US_EAST_1 // Region
-//    );
+    //Amazon Cognito credentials provider
+    public CognitoCachingCredentialsProvider getCredentials(Context context) {
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                context,
+                "us-east-1:a3817da0-9c99-4fc7-a61a-cc509fb5b8a0", // Identity Pool ID
+                Regions.US_EAST_1 // Region
+        );
 
+
+        return credentialsProvider;
+
+    }
 }
