@@ -34,10 +34,7 @@ public class DbTestingActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //Run CRUD methods
-                new scanAllTrucks().execute();
-
-                displayResult.setText("dsd");
-
+                new queryTrucks().execute();
 
             }
         });
@@ -125,25 +122,27 @@ public class DbTestingActivity extends AppCompatActivity {
         }
     }
 
-//    private class queryTrucks extends AsyncTask<Void, Void, Double>{
-//        @Override
-//        protected Double doInBackground(Void... params){
-//
-//            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
-//            ManagerClass managerClass = new ManagerClass();
-//            CognitoCachingCredentialsProvider credentialsProvider = managerClass.getCredentials(DbTestingActivity.this); //Pass in the activity name
-//            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
-//            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
-//
-//            DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-//            PaginatedScanList<Truck> result = mapper.scan(Truck.class, scanExpression);
-//            for(int x = 0; x < result.size(); x++){
-//                Log.d("class", "Truck Name: " + result.get(x).getName() + ", Lat: " + result.get(x).getLat() + ", Lon: " + result.get(x).getLon());
-//
-//            }
-//            return result.get(0).getLon();
-//        }
-//    }
+    private class queryTrucks extends AsyncTask<Void, Void, Double>{
+        @Override
+        protected Double doInBackground(Void... name){
+
+            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+            ManagerClass managerClass = new ManagerClass();
+            CognitoCachingCredentialsProvider credentialsProvider = managerClass.getCredentials(DbTestingActivity.this); //Pass in the activity name
+            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+
+            DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+            PaginatedScanList<Truck> result = mapper.scan(Truck.class, scanExpression);
+
+            return result.get(0).getLon();
+        }
+
+        @Override
+        protected void onPostExecute(Double result) {
+            displayResult.setText(result.toString());
+        }
+    }
 
 
 }
