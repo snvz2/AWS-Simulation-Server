@@ -2,6 +2,8 @@ package edu.sjsu.teamneon.hangrymobile;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,6 +29,10 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                 .findFragmentById(R.id.truckMap);
         mapFragment.getMapAsync(this);
         /* Populate the list with truck names */
+        FrameLayout truckList = (FrameLayout) findViewById(R.id.truckList);
+        TextView truckView = new TextView(this);
+        truckView.setText(testFoodTruck.getName());
+        truckList.addView(truckView);
     }
 
 
