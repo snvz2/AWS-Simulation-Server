@@ -17,6 +17,12 @@
         tools:context="edu.sjsu.humlick.john.hangrymobile.TruckLocatorActivity"
         />
 
+    <Button
+        android:id="@+id/gps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get My Location" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
