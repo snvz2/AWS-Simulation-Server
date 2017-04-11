@@ -1,9 +1,15 @@
 package edu.sjsu.teamneon.hangrymobile;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,7 +19,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCallback {
-
+    Button btnLoc;
+    GPSTracker gps;
+    private static final int PERMS_REQUEST_CODE = 123;
     private GoogleMap mMap;
     private FoodTruck testFoodTruck = new FoodTruck("Test truck", "Test Address");
 
@@ -33,6 +41,32 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         TextView truckView = new TextView(this);
         truckView.setText(testFoodTruck.getName());
         truckList.addView(truckView);
+        btnLoc = (Button) findViewById(R.id.gps);
+
+        btnLoc.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                gps = new GPSTracker(FoodTruckLocator.this);
+
+                requestPerms();
+                if(gps.canGetLocation() && hasPermissions()) {
+                    gps.getLocation();
+                    double latitude = gps.getLatitude();
+                    double longitude = gps.getLongitude();
+
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "Your Location is -\nLat: " + latitude + "\nLong: "
+                                    + longitude, Toast.LENGTH_LONG).show();
+
+                } else {
+
+                    gps.showSettingsAlert();
+                    requestPerms();
+                }
+            }
+        });
     }
 
 
@@ -53,5 +87,28 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         mMap.addMarker(new MarkerOptions().position(testFoodTruck.getLatLng()).title(testFoodTruck.getName()));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(testFoodTruck.getLatLng()));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+    }
+    /**
+     * Checks if Permissions are valid
+     */
+    private boolean hasPermissions(){
+        int res = 0;
+        String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+        for (String perms : permissions){
+            res = checkCallingOrSelfPermission(perms);
+            if (!(res == PackageManager.PERMISSION_GRANTED)){
+                return false;
+            }
+        }
+        return true;
+    }
+    /**
+     * Displays dialog for user to enable locations permissions (ACCESS_FINE_LOCATION)
+     */
+    private void requestPerms(){
+        String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            requestPermissions(permissions,PERMS_REQUEST_CODE);}
+
     }
 }
