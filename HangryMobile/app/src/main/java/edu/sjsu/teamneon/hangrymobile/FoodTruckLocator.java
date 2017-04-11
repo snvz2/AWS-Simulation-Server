@@ -2,6 +2,8 @@ package edu.sjsu.teamneon.hangrymobile;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -11,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -18,7 +21,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCallback {
+public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCallback, LocationListener {
     Button btnLoc;
     GPSTracker gps;
     private static final int PERMS_REQUEST_CODE = 123;
@@ -26,12 +29,35 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
     private FoodTruck testFoodTruck = new FoodTruck("Test truck", "Test Address");
 
     @Override
+    public void onLocationChanged(Location location) {
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+        mMap.animateCamera(cameraUpdate);
+        gps.locationManager.removeUpdates(this);
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         /* Fake Food Truck */
         testFoodTruck.setLatLng(new LatLng(37.336228,-121.881071));
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_truck_locator);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.truckMap);
@@ -51,6 +77,7 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
 
                 requestPerms();
                 if(gps.canGetLocation() && hasPermissions()) {
+                    onLocationChanged(gps.getLocation());
                     gps.getLocation();
                     double latitude = gps.getLatitude();
                     double longitude = gps.getLongitude();
@@ -68,6 +95,12 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
             }
         });
     }
+
+
+/*
+    private void CameraUpdate(){
+
+    }*/
 
 
     /**
@@ -102,6 +135,7 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         }
         return true;
     }
+
     /**
      * Displays dialog for user to enable locations permissions (ACCESS_FINE_LOCATION)
      */

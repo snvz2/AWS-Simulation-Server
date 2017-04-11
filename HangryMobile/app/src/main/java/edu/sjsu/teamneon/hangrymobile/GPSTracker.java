@@ -18,6 +18,10 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+
 public class GPSTracker extends Service implements LocationListener {
     private final Context context;
 
@@ -152,6 +156,7 @@ public class GPSTracker extends Service implements LocationListener {
 
         return longitude;
     }
+
 
     @Nullable
     @Override
