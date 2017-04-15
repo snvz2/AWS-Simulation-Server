@@ -4,15 +4,22 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,7 +35,6 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
     GPSTracker gps;
     private static final int PERMS_REQUEST_CODE = 123;
     private GoogleMap mMap;
-    private FoodTruck testFoodTruck = new FoodTruck("Test truck", "Test Address");
     private Marker locationMarker;
     private float defaultZoom;
     private static String currentLocation = null;
@@ -92,8 +98,6 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         /* Set resource values */
         defaultZoom = Float.parseFloat(getResources().getString(R.string.default_zoom));
         currentLocation = getResources().getString(R.string.current_location);
-        /* Fake Food Truck */
-        testFoodTruck.setLatLng(new LatLng(37.336228,-121.881071));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_truck_locator);
 
@@ -104,7 +108,7 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         /* Populate the list with truck names */
         FrameLayout truckList = (FrameLayout) findViewById(R.id.truckList);
         TextView truckView = new TextView(this);
-        truckView.setText(testFoodTruck.getName());
+        //truckView.setText(testFoodTruck.getName());
         truckList.addView(truckView);
         btnLoc = (Button) findViewById(R.id.gps);
 
@@ -138,8 +142,10 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         mMap = googleMap;
 
         /* Add a marker for test food truck and move camera */
-        mMap.addMarker(new MarkerOptions().position(testFoodTruck.getLatLng()).title(testFoodTruck.getName()));
+        //mMap.addMarker(new MarkerOptions().position(testFoodTruck.getLatLng()).title(testFoodTruck.getName()));
         updatePos();
+        /* Get food truck locations */
+        new scanAllTrucks().execute();
     }
     /**
      * Checks if Permissions are valid
@@ -164,5 +170,106 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             requestPermissions(permissions,PERMS_REQUEST_CODE);}
 
+    }
+
+    /**
+     * Amazon AWS stuff goes down here
+     */
+    private class storeTruck extends AsyncTask<String, Integer, Integer>{
+        private String truckName;
+        String truckLon;
+        String truckLat;
+        public storeTruck(String name, String lon, String lat)
+        {
+            truckName = name;
+            truckLon = lon;
+            truckLat = lat;
+        }
+        @Override
+        protected Integer doInBackground(String... params){
+
+            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+            ManagerClass managerClass = new ManagerClass();
+            CognitoCachingCredentialsProvider credentialsProvider =
+                    managerClass.getCredentials(FoodTruckLocator.this); //Pass in the activity name
+            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+
+            //Get values through ID of field or Geo code
+            FoodTruck newTruck = new FoodTruck();
+            newTruck.setLat(truckLat);
+            newTruck.setLon(truckLon);
+            newTruck.setName(truckName);
+            mapper.save(newTruck);
+
+            return null;
+        }
+    }
+
+    private class updateTruck extends AsyncTask<Void, Integer, Integer>{
+        @Override
+        protected Integer doInBackground(Void... params){
+
+            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+            ManagerClass managerClass = new ManagerClass();
+            CognitoCachingCredentialsProvider credentialsProvider =
+                    managerClass.getCredentials(FoodTruckLocator.this); //Pass in the activity name
+            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+
+            //Selects a truck based on primary key (id) to update
+            FoodTruck truckToUpdate = mapper.load(FoodTruck.class, 3);
+            truckToUpdate.setName("New truck name");
+
+            mapper.save(truckToUpdate);
+
+            return null;
+        }
+    }
+
+    private class deleteTruck extends AsyncTask<Void, Integer, Integer> {
+        @Override
+        protected Integer doInBackground(Void... params){
+
+            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+            ManagerClass managerClass = new ManagerClass();
+            CognitoCachingCredentialsProvider credentialsProvider =
+                    managerClass.getCredentials(FoodTruckLocator.this); //Pass in the activity name
+            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+
+            //Selects a truck based on primary key (id) to delete
+            FoodTruck truckToDelete = mapper.load(FoodTruck.class, 6);
+
+            mapper.delete(truckToDelete);
+
+            return null;
+        }
+    }
+
+    //Returns all the entry in the database
+    private class scanAllTrucks extends AsyncTask<String, Integer, Integer>{
+        @Override
+        protected Integer doInBackground(String... params){
+
+            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+            ManagerClass managerClass = new ManagerClass();
+            CognitoCachingCredentialsProvider credentialsProvider =
+                    managerClass.getCredentials(FoodTruckLocator.this); //Pass in the activity name
+            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+
+            DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+            PaginatedScanList<FoodTruck> result = mapper.scan(FoodTruck.class, scanExpression);
+            for(int x = 0; x < result.size(); x++){
+                Log.d("CLASS", "Truck Name: " +
+                        result.get(x).getName() +
+                        ", Lat: " +
+                        result.get(x).getLat() +
+                        ", Lon: " +
+                        result.get(x).getLon());
+            }
+            return null;
+        }
     }
 }
