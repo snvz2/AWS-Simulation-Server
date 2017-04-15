@@ -37,6 +37,7 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
     private static final int PERMS_REQUEST_CODE = 123;
     private GoogleMap mMap;
     private ArrayList<Marker> truckList = new ArrayList<>();
+    private FrameLayout frameTruckList;
     private Marker locationMarker;
     private float defaultZoom;
     private static String currentLocation = null;
@@ -115,11 +116,8 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.truckMap);
         mapFragment.getMapAsync(this);
-        /* Populate the list with truck names */
-        FrameLayout truckList = (FrameLayout) findViewById(R.id.truckList);
-        TextView truckView = new TextView(this);
-        //truckView.setText(testFoodTruck.getName());
-        truckList.addView(truckView);
+        /* Get the truck list frame layout handle */
+        frameTruckList = (FrameLayout) findViewById(R.id.truckList);
         btnLoc = (Button) findViewById(R.id.gps);
 
         btnLoc.setOnClickListener(new View.OnClickListener() {
@@ -270,33 +268,28 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
 
             DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
             result = mapper.scan(FoodTruck.class, scanExpression);
-            /*
-            for(int x = 0; x < result.size(); x++){
-                LatLng latLng = new LatLng(
-                        Double.parseDouble(result.get(x).getLat()),
-                        Double.parseDouble(result.get(x).getLon()));
-                truckList.add(mMap.addMarker(
-                        new MarkerOptions().position(latLng).title(
-                                result.get(x).getName())));
-                Log.d("CLASS", "Truck Name: " +
-                        result.get(x).getName() +
-                        ", Lat: " +
-                        result.get(x).getLat() +
-                        ", Lon: " +
-                        result.get(x).getLon());
-            }
-            */
+
             return null;
         }
+
         @Override
         protected void onPostExecute(Void v) {
+            /* Remove all truck views */
+            frameTruckList.removeAllViews();
+
+            /* Iterate through all newly discovered trucks */
             for (FoodTruck truck: result) {
                 LatLng latLng = new LatLng(
                         Double.parseDouble(truck.getLat()),
                         Double.parseDouble(truck.getLon()));
+                /* Add truck markers to map */
                 truckList.add(mMap.addMarker(
                         new MarkerOptions().position(latLng).title(
                                 truck.getName())));
+                /* Create a truck view and add it to LinearLayout */
+                TextView truckView = new TextView(FoodTruckLocator.this);
+                truckView.setText(truck.getName());
+                frameTruckList.addView(truckView);
             }
         }
     }
