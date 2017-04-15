@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -30,11 +29,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCallback, LocationListener {
     Button btnLoc;
     GPSTracker gps;
     private static final int PERMS_REQUEST_CODE = 123;
     private GoogleMap mMap;
+    private ArrayList<Marker> truckList = new ArrayList<>();
     private Marker locationMarker;
     private float defaultZoom;
     private static String currentLocation = null;
@@ -80,6 +82,14 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
             gps.getLocation();
             double latitude = gps.getLatitude();
             double longitude = gps.getLongitude();
+            /* If we have prior markers, free them now */
+            if (!truckList.isEmpty()) {
+                truckList.clear();
+            }
+            /* Get food truck locations */
+            new scanAllTrucks().execute();
+            /* Add Markers for newly discovered food trucks */
+
 
             Toast.makeText(
                     getApplicationContext(),
@@ -144,8 +154,6 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         /* Add a marker for test food truck and move camera */
         //mMap.addMarker(new MarkerOptions().position(testFoodTruck.getLatLng()).title(testFoodTruck.getName()));
         updatePos();
-        /* Get food truck locations */
-        new scanAllTrucks().execute();
     }
     /**
      * Checks if Permissions are valid
@@ -248,9 +256,10 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
     }
 
     //Returns all the entry in the database
-    private class scanAllTrucks extends AsyncTask<String, Integer, Integer>{
+    private class scanAllTrucks extends AsyncTask<String, Void, Void>{
+        private PaginatedScanList<FoodTruck> result;
         @Override
-        protected Integer doInBackground(String... params){
+        protected Void doInBackground(String... params) {
 
             //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
             ManagerClass managerClass = new ManagerClass();
@@ -260,8 +269,15 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
             DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
 
             DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-            PaginatedScanList<FoodTruck> result = mapper.scan(FoodTruck.class, scanExpression);
+            result = mapper.scan(FoodTruck.class, scanExpression);
+            /*
             for(int x = 0; x < result.size(); x++){
+                LatLng latLng = new LatLng(
+                        Double.parseDouble(result.get(x).getLat()),
+                        Double.parseDouble(result.get(x).getLon()));
+                truckList.add(mMap.addMarker(
+                        new MarkerOptions().position(latLng).title(
+                                result.get(x).getName())));
                 Log.d("CLASS", "Truck Name: " +
                         result.get(x).getName() +
                         ", Lat: " +
@@ -269,7 +285,19 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                         ", Lon: " +
                         result.get(x).getLon());
             }
+            */
             return null;
+        }
+        @Override
+        protected void onPostExecute(Void v) {
+            for (FoodTruck truck: result) {
+                LatLng latLng = new LatLng(
+                        Double.parseDouble(truck.getLat()),
+                        Double.parseDouble(truck.getLon()));
+                truckList.add(mMap.addMarker(
+                        new MarkerOptions().position(latLng).title(
+                                truck.getName())));
+            }
         }
     }
 }
