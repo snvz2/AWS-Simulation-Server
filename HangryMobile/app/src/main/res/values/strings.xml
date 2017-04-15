@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">HangryMobile</string>
     <string name="title_activity_food_truck_locator">Map</string>
+    <string name="current_location">Current Location</string>
+    <string name="gps_activity_food_truck_locator">Update Location</string>
+    <string name="default_zoom">15.0</string>
 </resources>

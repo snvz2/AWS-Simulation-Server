@@ -30,7 +30,8 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
     private GoogleMap mMap;
     private FoodTruck testFoodTruck = new FoodTruck("Test truck", "Test Address");
     private Marker locationMarker;
-    private static final String locationName = "Current Location";
+    private float defaultZoom;
+    private static String currentLocation = null;
 
     @Override
     public void onLocationChanged(Location location) {
@@ -40,12 +41,12 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         }
         locationMarker = mMap.addMarker(
                 new MarkerOptions().position(latLng).title(
-                        locationName).icon(BitmapDescriptorFactory.defaultMarker(
+                        currentLocation).icon(BitmapDescriptorFactory.defaultMarker(
                                 BitmapDescriptorFactory.HUE_AZURE)));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         mMap.animateCamera(cameraUpdate);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(defaultZoom));
         gps.locationManager.removeUpdates(this);
     }
 
@@ -64,8 +65,33 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
 
     }
 
+    public void updatePos() {
+        gps = new GPSTracker(FoodTruckLocator.this);
+
+        requestPerms();
+        if(gps.canGetLocation() && hasPermissions()) {
+            onLocationChanged(gps.getLocation());
+            gps.getLocation();
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+
+            Toast.makeText(
+                    getApplicationContext(),
+                    "Your Location is -\nLat: " + latitude + "\nLong: "
+                            + longitude, Toast.LENGTH_LONG).show();
+
+        } else {
+
+            gps.showSettingsAlert();
+            requestPerms();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        /* Set resource values */
+        defaultZoom = Float.parseFloat(getResources().getString(R.string.default_zoom));
+        currentLocation = getResources().getString(R.string.current_location);
         /* Fake Food Truck */
         testFoodTruck.setLatLng(new LatLng(37.336228,-121.881071));
         super.onCreate(savedInstanceState);
@@ -86,25 +112,7 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
 
             @Override
             public void onClick(View v) {
-                gps = new GPSTracker(FoodTruckLocator.this);
-
-                requestPerms();
-                if(gps.canGetLocation() && hasPermissions()) {
-                    onLocationChanged(gps.getLocation());
-                    gps.getLocation();
-                    double latitude = gps.getLatitude();
-                    double longitude = gps.getLongitude();
-
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "Your Location is -\nLat: " + latitude + "\nLong: "
-                                    + longitude, Toast.LENGTH_LONG).show();
-
-                } else {
-
-                    gps.showSettingsAlert();
-                    requestPerms();
-                }
+                updatePos();
             }
         });
     }
@@ -131,8 +139,7 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
 
         /* Add a marker for test food truck and move camera */
         mMap.addMarker(new MarkerOptions().position(testFoodTruck.getLatLng()).title(testFoodTruck.getName()));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(testFoodTruck.getLatLng()));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+        updatePos();
     }
     /**
      * Checks if Permissions are valid
