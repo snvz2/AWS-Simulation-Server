@@ -34,15 +34,24 @@ public class DbTestingActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //Run CRUD methods
-                new queryTrucks().execute();
+                new storeTruck("Tacos 2", "3.13", "62.3").execute();
 
             }
         });
     }
 
-    private class storeTruck extends AsyncTask<Void, Integer, Integer>{
+    private class storeTruck extends AsyncTask<String, Integer, Integer>{
+        private String truckName;
+        String truckLon;
+        String truckLat;
+        public storeTruck(String name, String lon, String lat)
+        {
+            truckName = name;
+            truckLon = lon;
+            truckLat = lat;
+        }
         @Override
-        protected Integer doInBackground(Void... params){
+        protected Integer doInBackground(String... params){
 
             //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
             ManagerClass managerClass = new ManagerClass();
@@ -52,10 +61,9 @@ public class DbTestingActivity extends AppCompatActivity {
 
             //Get values through ID of field or Geo code
             Truck newTruck = new Truck();
-            newTruck.setID(5);
-            newTruck.setLat(3);
-            newTruck.setLon(4);
-            newTruck.setName("Best Tacos");
+            newTruck.setLat(truckLat);
+            newTruck.setLon(truckLon);
+            newTruck.setName(truckName);
             mapper.save(newTruck);
 
             return null;
@@ -115,34 +123,50 @@ public class DbTestingActivity extends AppCompatActivity {
             DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
             PaginatedScanList<Truck> result = mapper.scan(Truck.class, scanExpression);
             for(int x = 0; x < result.size(); x++){
-                Log.d("class", "Truck Name: " + result.get(x).getName() + ", Lat: " + result.get(x).getLat() + ", Lon: " + result.get(x).getLon());
+                Log.d("CLASS", "Truck Name: " + result.get(x).getName() + ", Lat: " + result.get(x).getLat() + ", Lon: " + result.get(x).getLon());
 
             }
             return null;
         }
     }
-
-    private class queryTrucks extends AsyncTask<Void, Void, Double>{
-        @Override
-        protected Double doInBackground(Void... name){
-
-            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
-            ManagerClass managerClass = new ManagerClass();
-            CognitoCachingCredentialsProvider credentialsProvider = managerClass.getCredentials(DbTestingActivity.this); //Pass in the activity name
-            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
-            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
-
-            DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-            PaginatedScanList<Truck> result = mapper.scan(Truck.class, scanExpression);
-
-            return result.get(0).getLon();
-        }
-
-        @Override
-        protected void onPostExecute(Double result) {
-            displayResult.setText(result.toString());
-        }
-    }
+      //WORK IN PROGRESS
+//    private class queryTrucks extends AsyncTask<Void, Void, Double>{
+//        @Override
+//        protected Double doInBackground(Void... name){
+//
+//            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+//            ManagerClass managerClass = new ManagerClass();
+//            CognitoCachingCredentialsProvider credentialsProvider = managerClass.getCredentials(DbTestingActivity.this); //Pass in the activity name
+//            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+//            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+//
+//            Truck truckToFind = new Truck();
+//            truckToFind.setID("");
+//
+//            String queryString = "Best";
+//
+//            Condition rangeKeyCondition = new Condition()
+//                    .withComparisonOperator(ComparisonOperator.BEGINS_WITH.toString())
+//                    .withAttributeValueList(new AttributeValue().withS(queryString.toString()));
+//
+//            DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression()
+//                    .withHashKeyValues(truckToFind)
+//                    .withRangeKeyCondition("name", rangeKeyCondition)
+//                    .withConsistentRead(false);
+//
+//            PaginatedQueryList<Truck> result = mapper.query(Truck.class, queryExpression);
+//// Do something with result.
+////            Log.d("query",Double.toString(result.get(0).getID()));
+//
+//            return null;
+//        }
+//
+//
+//        @Override
+//        protected void onPostExecute(Double result) {
+//            displayResult.setText(result.toString());
+//        }
+//    }
 
 
 }
