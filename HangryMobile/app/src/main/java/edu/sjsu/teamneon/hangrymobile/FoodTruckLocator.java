@@ -18,7 +18,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCallback, LocationListener {
@@ -27,12 +29,23 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
     private static final int PERMS_REQUEST_CODE = 123;
     private GoogleMap mMap;
     private FoodTruck testFoodTruck = new FoodTruck("Test truck", "Test Address");
+    private Marker locationMarker;
+    private static final String locationName = "Current Location";
 
     @Override
     public void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        if (locationMarker != null) {
+            locationMarker.remove();
+        }
+        locationMarker = mMap.addMarker(
+                new MarkerOptions().position(latLng).title(
+                        locationName).icon(BitmapDescriptorFactory.defaultMarker(
+                                BitmapDescriptorFactory.HUE_AZURE)));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         mMap.animateCamera(cameraUpdate);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
         gps.locationManager.removeUpdates(this);
     }
 
