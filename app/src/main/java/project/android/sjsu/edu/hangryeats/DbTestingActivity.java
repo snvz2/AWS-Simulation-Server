@@ -3,6 +3,7 @@ package project.android.sjsu.edu.hangryeats;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ScrollingTabContainerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -34,8 +35,8 @@ public class DbTestingActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //Run CRUD methods
-                new storeTruck("Tacos 2", "3.13", "62.3").execute();
-
+                new scanAllTrucks().execute();
+                //new storeTruck("bombs","all","day").execute();
             }
         });
     }
@@ -110,9 +111,9 @@ public class DbTestingActivity extends AppCompatActivity {
     }
 
     //Returns all the entry in the database
-    private class scanAllTrucks extends AsyncTask<Void, Integer, Integer>{
+    private class scanAllTrucks extends AsyncTask<String, Integer, Integer>{
         @Override
-        protected Integer doInBackground(Void... params){
+        protected Integer doInBackground(String... params){
 
             //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
             ManagerClass managerClass = new ManagerClass();
