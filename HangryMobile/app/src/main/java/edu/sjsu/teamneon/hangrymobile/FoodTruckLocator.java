@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +37,7 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
     private static final int PERMS_REQUEST_CODE = 123;
     private GoogleMap mMap;
     private ArrayList<Marker> truckList = new ArrayList<>();
-    private FrameLayout frameTruckList;
+    private RelativeLayout frameTruckList;
     private Marker locationMarker;
     private float defaultZoom;
     private static String currentLocation = null;
@@ -117,7 +117,7 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                 .findFragmentById(R.id.truckMap);
         mapFragment.getMapAsync(this);
         /* Get the truck list frame layout handle */
-        frameTruckList = (FrameLayout) findViewById(R.id.truckList);
+        frameTruckList = (RelativeLayout) findViewById(R.id.truckList);
         btnLoc = (Button) findViewById(R.id.gps);
 
         btnLoc.setOnClickListener(new View.OnClickListener() {
@@ -276,6 +276,8 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         protected void onPostExecute(Void v) {
             /* Remove all truck views */
             frameTruckList.removeAllViews();
+            TextView previous = null;
+            int id = 1;
 
             /* Iterate through all newly discovered trucks */
             for (FoodTruck truck: result) {
@@ -288,8 +290,20 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                                 truck.getName())));
                 /* Create a truck view and add it to LinearLayout */
                 TextView truckView = new TextView(FoodTruckLocator.this);
+                truckView.setId(id++);
+                /* Create parameters for the new truck view */
+                RelativeLayout.LayoutParams params =
+                        new RelativeLayout.LayoutParams(
+                                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                RelativeLayout.LayoutParams.WRAP_CONTENT);
+                /* If there was a prior truck view, this one goes below it */
+                if (previous != null) {
+                    params.addRule(RelativeLayout.BELOW, previous.getId());
+                }
+                truckView.setLayoutParams(params);
                 truckView.setText(truck.getName());
                 frameTruckList.addView(truckView);
+                previous = truckView;
             }
         }
     }
