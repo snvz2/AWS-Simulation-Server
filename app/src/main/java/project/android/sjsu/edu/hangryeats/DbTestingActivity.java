@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.os.Handler;
+
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.services.dynamodbv2.*;
@@ -15,6 +17,11 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
+import com.amazonaws.services.dynamodbv2.model.ConditionalOperator;
+
+import java.lang.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class DbTestingActivity extends AppCompatActivity {
 
@@ -35,24 +42,27 @@ public class DbTestingActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //Run CRUD methods
-                new scanAllTrucks().execute();
+                //new updateCoord().execute();
+                timer.schedule(doAsynchronousTask, 0, 10000); //Run every 10 seconds
+
                 //new storeTruck("bombs","all","day").execute();
             }
         });
     }
 
-    private class storeTruck extends AsyncTask<String, Integer, Integer>{
+    private class storeTruck extends AsyncTask<String, Integer, Integer> {
         private String truckName;
         String truckLon;
         String truckLat;
-        public storeTruck(String name, String lon, String lat)
-        {
+
+        public storeTruck(String name, String lon, String lat) {
             truckName = name;
             truckLon = lon;
             truckLat = lat;
         }
+
         @Override
-        protected Integer doInBackground(String... params){
+        protected Integer doInBackground(String... params) {
 
             //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
             ManagerClass managerClass = new ManagerClass();
@@ -71,9 +81,9 @@ public class DbTestingActivity extends AppCompatActivity {
         }
     }
 
-    private class updateTruck extends AsyncTask<Void, Integer, Integer>{
+    private class updateTruck extends AsyncTask<Void, Integer, Integer> {
         @Override
-        protected Integer doInBackground(Void... params){
+        protected Integer doInBackground(Void... params) {
 
             //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
             ManagerClass managerClass = new ManagerClass();
@@ -82,7 +92,7 @@ public class DbTestingActivity extends AppCompatActivity {
             DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
 
             //Selects a truck based on primary key (id) to update
-            Truck truckToUpdate = mapper.load(Truck.class, 3);
+            Truck truckToUpdate = mapper.load(Truck.class, "3");
             truckToUpdate.setName("New truck name");
 
             mapper.save(truckToUpdate);
@@ -91,9 +101,9 @@ public class DbTestingActivity extends AppCompatActivity {
         }
     }
 
-    private class deleteTruck extends AsyncTask<Void, Integer, Integer>{
+    private class deleteTruck extends AsyncTask<Void, Integer, Integer> {
         @Override
-        protected Integer doInBackground(Void... params){
+        protected Integer doInBackground(Void... params) {
 
             //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
             ManagerClass managerClass = new ManagerClass();
@@ -111,9 +121,9 @@ public class DbTestingActivity extends AppCompatActivity {
     }
 
     //Returns all the entry in the database
-    private class scanAllTrucks extends AsyncTask<String, Integer, Integer>{
+    private class scanAllTrucks extends AsyncTask<String, Integer, Integer> {
         @Override
-        protected Integer doInBackground(String... params){
+        protected Integer doInBackground(String... params) {
 
             //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
             ManagerClass managerClass = new ManagerClass();
@@ -123,17 +133,19 @@ public class DbTestingActivity extends AppCompatActivity {
 
             DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
             PaginatedScanList<Truck> result = mapper.scan(Truck.class, scanExpression);
-            for(int x = 0; x < result.size(); x++){
-                Log.d("CLASS", "Truck Name: " + result.get(x).getName() + ", Lat: " + result.get(x).getLat() + ", Lon: " + result.get(x).getLon());
+            for (int x = 0; x < result.size(); x++) {
+                //Log.d("CLASS", "Truck Name: " + result.get(x).getName() + ", Lat: " + result.get(x).getLat() + ", Lon: " + result.get(x).getLon());
 
             }
             return null;
         }
     }
-      //WORK IN PROGRESS
-//    private class queryTrucks extends AsyncTask<Void, Void, Double>{
+    //WORK IN PROGRESS
+//    private class queryTrucks extends AsyncTask<String, Void, Void>{
+//          private Truck truckToFind = new Truck();
+//          private PaginatedQueryList<Truck> result;
 //        @Override
-//        protected Double doInBackground(Void... name){
+//        protected Void doInBackground(String... name){
 //
 //            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
 //            ManagerClass managerClass = new ManagerClass();
@@ -141,33 +153,103 @@ public class DbTestingActivity extends AppCompatActivity {
 //            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
 //            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
 //
-//            Truck truckToFind = new Truck();
-//            truckToFind.setID("");
+//            Condition condition = new Condition()
+//                    .withComparisonOperator(ComparisonOperator.CONTAINS.toString())
+//                    .withAttributeValueList(new AttributeValue().withS("Garage"));
 //
-//            String queryString = "Best";
-//
-//            Condition rangeKeyCondition = new Condition()
-//                    .withComparisonOperator(ComparisonOperator.BEGINS_WITH.toString())
-//                    .withAttributeValueList(new AttributeValue().withS(queryString.toString()));
+////            DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression()
+////                    .withAT
 //
 //            DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression()
-//                    .withHashKeyValues(truckToFind)
-//                    .withRangeKeyCondition("name", rangeKeyCondition)
-//                    .withConsistentRead(false);
+//                    .withRangeKeyCondition()
+//                    .withQueryFilterEntry("name", condition);
 //
 //            PaginatedQueryList<Truck> result = mapper.query(Truck.class, queryExpression);
-//// Do something with result.
-////            Log.d("query",Double.toString(result.get(0).getID()));
 //
 //            return null;
 //        }
 //
 //
 //        @Override
-//        protected void onPostExecute(Double result) {
+//        protected void onPostExecute(Void v) {
 //            displayResult.setText(result.toString());
 //        }
 //    }
 
+    private class queryTrucks extends AsyncTask<String, Void, Void> {
+        private Truck truckToFind = new Truck();
+        private PaginatedQueryList<Truck> result;
 
+        @Override
+        protected Void doInBackground(String... name) {
+
+            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+            ManagerClass managerClass = new ManagerClass();
+            CognitoCachingCredentialsProvider credentialsProvider = managerClass.getCredentials(DbTestingActivity.this); //Pass in the activity name
+            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+
+            Condition condition = new Condition()
+                    .withComparisonOperator(ComparisonOperator.CONTAINS.toString())
+                    .withAttributeValueList(new AttributeValue().withS("Garage"));
+
+//            DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression()
+//                    .withAT
+
+//            DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression()
+//                    .withRangeKeyCondition()
+//                    .withQueryFilterEntry("name", condition);
+
+//            PaginatedQueryList<Truck> result = mapper.query(Truck.class, queryExpression);
+
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void v) {
+           // displayResult.setText(result.toString());
+        }
+    }
+
+
+    final android.os.Handler handler = new android.os.Handler();
+    Timer timer = new Timer();
+    TimerTask doAsynchronousTask = new TimerTask() {
+        @Override
+        public void run() {
+            handler.post(new Runnable() {
+                public void run() {
+                    try {
+                        new updateTruck().execute();
+                    } catch (Exception e) {
+                    }
+                }
+            });
+        }
+    };
+
+
+    private class updateCoord extends AsyncTask<Void, Integer, Integer> {
+        @Override
+        protected Integer doInBackground(Void... params) {
+
+//            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+//            ManagerClass managerClass = new ManagerClass();
+//            CognitoCachingCredentialsProvider credentialsProvider = managerClass.getCredentials(DbTestingActivity.this); //Pass in the activity name
+//            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+//            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+//
+//            //Selects a truck based on primary key (id) to update
+//            Truck truckToUpdate = mapper.load(Truck.class, 3);
+//            truckToUpdate.setName("New truck name");
+
+            //mapper.save(truckToUpdate);
+            //timer.schedule(doAsynchronousTask, 0, 10000); //execute in every 10 ms
+
+
+            return null;
+        }
+
+    }
 }

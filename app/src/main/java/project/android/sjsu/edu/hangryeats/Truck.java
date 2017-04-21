@@ -25,7 +25,7 @@ public class Truck {
         this.id = id;
     }
 
-    @DynamoDBIndexRangeKey(attributeName = "name")
+    @DynamoDBAttribute(attributeName = "name")
     public String getName(){
         return name;
     }
