@@ -41,14 +41,28 @@ public class DbTestingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //Run CRUD methods
-                //new updateCoord().execute();
-                timer.schedule(doAsynchronousTask, 0, 10000); //Run every 10 seconds
+                //Takes in (TimerTask, first run, interval runs)
+                timer.schedule(updateTruckCoords, 0, 10000); //Run every 10 seconds
 
-                //new storeTruck("bombs","all","day").execute();
             }
         });
     }
+
+    final Handler handler = new android.os.Handler();
+    Timer timer = new Timer();
+    TimerTask updateTruckCoords = new TimerTask() {
+        @Override
+        public void run() {
+            handler.post(new Runnable() {
+                public void run() {
+                    try {
+                        new updateTruck().execute();
+                    } catch (Exception e) {
+                    }
+                }
+            });
+        }
+    };
 
     private class storeTruck extends AsyncTask<String, Integer, Integer> {
         private String truckName;
@@ -211,23 +225,6 @@ public class DbTestingActivity extends AppCompatActivity {
            // displayResult.setText(result.toString());
         }
     }
-
-
-    final android.os.Handler handler = new android.os.Handler();
-    Timer timer = new Timer();
-    TimerTask doAsynchronousTask = new TimerTask() {
-        @Override
-        public void run() {
-            handler.post(new Runnable() {
-                public void run() {
-                    try {
-                        new updateTruck().execute();
-                    } catch (Exception e) {
-                    }
-                }
-            });
-        }
-    };
 
 
     private class updateCoord extends AsyncTask<Void, Integer, Integer> {
