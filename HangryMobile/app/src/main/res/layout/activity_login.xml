@@ -13,16 +13,19 @@
 
     <!-- Login progress -->
 
-    <EditText
-        android:id="@+id/editText"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
+        android:fontFamily="cursive"
+        android:paddingBottom="30dp"
+        android:paddingTop="60dp"
         android:text="Hangry Mobile"
-        android:textStyle="bold"
         android:textAlignment="center"
-        android:/>
+        android:textAllCaps="false"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:textSize="58sp"
+        android:textStyle="bold" />
 
     <ProgressBar
         android:id="@+id/login_progress"
