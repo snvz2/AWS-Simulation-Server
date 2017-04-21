@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "/Users/danieltam/AndroidStudioProjects/HangryMobile/app/build/intermediates/res/merged/debug/mipmap-mdpi/ic_launcher_round.png",
+        "source": "/Users/danieltam/AndroidStudioProjects/HangryMobile/app/src/main/res/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "/Users/danieltam/AndroidStudioProjects/Neon/HangryMobile/app/build/intermediates/res/merged/debug/mipmap-mdpi/ic_launcher.png",
+        "source": "/Users/danieltam/AndroidStudioProjects/Neon/HangryMobile/app/src/main/res/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/danieltam/AndroidStudioProjects/Neon/HangryMobile/app/build/intermediates/res/merged/debug/mipmap-mdpi/ic_launcher_round.png",
+        "source": "/Users/danieltam/AndroidStudioProjects/Neon/HangryMobile/app/src/main/res/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "/Users/danieltam/AndroidStudioProjects/HangryMobile/app/build/intermediates/res/merged/debug/mipmap-mdpi/ic_launcher.png",
+        "source": "/Users/danieltam/AndroidStudioProjects/HangryMobile/app/src/main/res/mipmap-mdpi/ic_launcher.png"
+    }
+]

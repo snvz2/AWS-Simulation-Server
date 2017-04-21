@@ -1,18 +1,28 @@
 package edu.sjsu.teamneon.hangrymobile;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ListView;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
@@ -30,6 +40,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCallback, LocationListener {
     Button btnLoc;
@@ -41,6 +52,34 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
     private Marker locationMarker;
     private float defaultZoom;
     private static String currentLocation = null;
+
+    //For list view
+    private ArrayList<FoodTruck> infoArray = new ArrayList<FoodTruck>();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        /* Set resource values */
+        defaultZoom = Float.parseFloat(getResources().getString(R.string.default_zoom));
+        currentLocation = getResources().getString(R.string.current_location);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_food_truck_locator);
+
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.truckMap);
+        mapFragment.getMapAsync(this);
+        /* Get the truck list frame layout handle */
+        //frameTruckList = (RelativeLayout) findViewById(R.id.truckList);
+        btnLoc = (Button) findViewById(R.id.gps);
+
+        btnLoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updatePos();
+            }
+        });
+
+    }
 
     @Override
     public void onLocationChanged(Location location) {
@@ -104,32 +143,6 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        /* Set resource values */
-        defaultZoom = Float.parseFloat(getResources().getString(R.string.default_zoom));
-        currentLocation = getResources().getString(R.string.current_location);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_food_truck_locator);
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.truckMap);
-        mapFragment.getMapAsync(this);
-        /* Get the truck list frame layout handle */
-        frameTruckList = (RelativeLayout) findViewById(R.id.truckList);
-        btnLoc = (Button) findViewById(R.id.gps);
-
-        btnLoc.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                updatePos();
-            }
-        });
-    }
-
-
 /*
     private void CameraUpdate(){
 
@@ -183,8 +196,8 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
      */
     private class storeTruck extends AsyncTask<String, Integer, Integer>{
         private String truckName;
-        String truckLon;
-        String truckLat;
+        private String truckLon;
+        private String truckLat;
         public storeTruck(String name, String lon, String lat)
         {
             truckName = name;
@@ -202,6 +215,7 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
             DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
 
             //Get values through ID of field or Geo code
+            //Takes in (name, lon, lat
             FoodTruck newTruck = new FoodTruck();
             newTruck.setLat(truckLat);
             newTruck.setLon(truckLon);
@@ -233,25 +247,25 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         }
     }
 
-    private class deleteTruck extends AsyncTask<Void, Integer, Integer> {
-        @Override
-        protected Integer doInBackground(Void... params){
-
-            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
-            ManagerClass managerClass = new ManagerClass();
-            CognitoCachingCredentialsProvider credentialsProvider =
-                    managerClass.getCredentials(FoodTruckLocator.this); //Pass in the activity name
-            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
-            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
-
-            //Selects a truck based on primary key (id) to delete
-            FoodTruck truckToDelete = mapper.load(FoodTruck.class, 6);
-
-            mapper.delete(truckToDelete);
-
-            return null;
-        }
-    }
+//    private class deleteTruck extends AsyncTask<Void, Integer, Integer> {
+//        @Override
+//        protected Integer doInBackground(Void... params){
+//
+//            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+//            ManagerClass managerClass = new ManagerClass();
+//            CognitoCachingCredentialsProvider credentialsProvider =
+//                    managerClass.getCredentials(FoodTruckLocator.this); //Pass in the activity name
+//            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+//            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+//
+//            //Selects a truck based on primary key (id) to delete
+//            FoodTruck truckToDelete = mapper.load(FoodTruck.class, 6);
+//
+//            mapper.delete(truckToDelete);
+//
+//            return null;
+//        }
+//    }
 
     //Returns all the entry in the database
     private class scanAllTrucks extends AsyncTask<String, Void, Void>{
@@ -268,14 +282,14 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
 
             DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
             result = mapper.scan(FoodTruck.class, scanExpression);
-
             return null;
         }
 
         @Override
         protected void onPostExecute(Void v) {
             /* Remove all truck views */
-            frameTruckList.removeAllViews();
+            infoArray.clear();
+//            frameTruckList.removeAllViews();
             TextView previous = null;
             int id = 1;
 
@@ -288,25 +302,83 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                 truckList.add(mMap.addMarker(
                         new MarkerOptions().position(latLng).title(
                                 truck.getName())));
+
+                //Scan each truck to list view adapter
+                FoodTruck truckToAdd = new FoodTruck();
+                truckToAdd.setName(truck.getName());
+                truckToAdd.setLat(truck.getLat());
+                truckToAdd.setLon(truck.getLon());
+                infoArray.add(truckToAdd);
+                populateListView();
                 /* Create a truck view and add it to LinearLayout */
-                TextView truckView = new TextView(FoodTruckLocator.this);
-                truckView.setTextSize(30);
-                truckView.setId(id++);
+//                TextView truckView = new TextView(FoodTruckLocator.this);
+//                truckView.setTextSize(30);
+//                truckView.setId(id++);
                 /* Create parameters for the new truck view */
-                RelativeLayout.LayoutParams params =
-                        new RelativeLayout.LayoutParams(
-                                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                                RelativeLayout.LayoutParams.WRAP_CONTENT);
+//                RelativeLayout.LayoutParams params =
+//                        new RelativeLayout.LayoutParams(
+//                                RelativeLayout.LayoutParams.WRAP_CONTENT,
+//                                RelativeLayout.LayoutParams.WRAP_CONTENT);
 
                 /* If there was a prior truck view, this one goes below it */
-                if (previous != null) {
-                    params.addRule(RelativeLayout.BELOW, previous.getId());
-                }
-                truckView.setLayoutParams(params);
-                truckView.setText(truck.getName());
-                frameTruckList.addView(truckView);
-                previous = truckView;
+//                if (previous != null) {
+//                    params.addRule(RelativeLayout.BELOW, previous.getId());
+//                }
+//                truckView.setLayoutParams(params);
+//                truckView.setText(truck.getName());
+//                frameTruckList.addView(truckView);
+//                previous = truckView;
             }
         }
+    }
+
+    private class TruckCustomAdapter extends ArrayAdapter<FoodTruck>{
+        private int layout;
+        public TruckCustomAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<FoodTruck> objects) {
+            super(context, resource, objects);
+            layout = resource;
+        }
+
+        @NonNull
+        @Override
+        public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            ViewHolder mainViewHolder;
+            if(convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                convertView = inflater.inflate(layout, parent, false);
+                ViewHolder viewHolder = new ViewHolder();
+                viewHolder.truckName = (TextView) convertView.findViewById(R.id.listName); //Attach names here
+                viewHolder.truckName.setText(getItem(position).getName());
+                viewHolder.truckInfoBtn = (Button) convertView.findViewById(R.id.listBtn);
+                viewHolder.truckInfoBtn.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        Toast.makeText(getContext(), "Button was clicked for list item " + position, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                convertView.setTag(viewHolder);
+            }
+
+            return convertView;
+        }
+    }
+    public class ViewHolder {
+        TextView truckName;
+        Button truckInfoBtn;
+    }
+
+    private void populateListView(){
+
+        ListView truckListView = (ListView) findViewById(R.id.listView); // Find list view id
+
+        truckListView.setAdapter(new TruckCustomAdapter(this, R.layout.list_item, infoArray));
+
+        truckListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(FoodTruckLocator.this, "List item was clicked at " + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

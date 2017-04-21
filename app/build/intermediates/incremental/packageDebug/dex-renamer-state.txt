@@ -1,0 +1,7 @@
+#Sat Apr 15 13:12:56 PDT 2017
+base.0=/Users/danieltam/AndroidStudioProjects/HangryMobile/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_93f1b6b5235b2388a12b96dcd3be2ba5874c25b9
+renamed.1=classes.dex
+renamed.0=classes2.dex
+file.1=/Users/danieltam/AndroidStudioProjects/HangryMobile/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_fe09d0c3c27a88a6fafe8c05d1514b7a7e425f1c/classes.dex
+base.1=/Users/danieltam/AndroidStudioProjects/HangryMobile/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_fe09d0c3c27a88a6fafe8c05d1514b7a7e425f1c
+file.0=/Users/danieltam/AndroidStudioProjects/HangryMobile/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_93f1b6b5235b2388a12b96dcd3be2ba5874c25b9/classes.dex
