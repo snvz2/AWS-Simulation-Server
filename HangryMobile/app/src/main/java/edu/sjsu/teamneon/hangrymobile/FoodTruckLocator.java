@@ -290,7 +290,6 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         protected void onPostExecute(Void v) {
             /* Remove all truck views */
             infoArray.clear();
-            int id = 1;
 
             /* Iterate through all newly discovered trucks */
             for (FoodTruck truck: result) {
@@ -352,6 +351,7 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                 viewHolder.truckInfoBtn.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
+
                         Toast.makeText(getContext(), "Button was clicked for list item " + position, Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -375,7 +375,14 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         truckListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(FoodTruckLocator.this, "List item was clicked at " + position, Toast.LENGTH_SHORT).show();
+                // Get the clicked on food truck and center the map on it
+                FoodTruck foodTruck = infoArray.get(position);
+                LatLng latLng = new LatLng(Float.parseFloat(foodTruck.getLat()),
+                        Float.parseFloat(foodTruck.getLon()));
+                CameraUpdate center = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+                CameraUpdate zoom = CameraUpdateFactory.zoomTo(defaultZoom);
+                mMap.moveCamera(center);
+                mMap.animateCamera(zoom);
             }
         });
 
