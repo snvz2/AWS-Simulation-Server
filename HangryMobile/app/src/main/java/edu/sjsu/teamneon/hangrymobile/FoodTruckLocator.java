@@ -131,11 +131,11 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
             new scanAllTrucks().execute();
             /* Add Markers for newly discovered food trucks */
 
-
+/*
             Toast.makeText(
                     getApplicationContext(),
                     "Your Location is -\nLat: " + latitude + "\nLong: "
-                            + longitude, Toast.LENGTH_LONG).show();
+                            + longitude, Toast.LENGTH_LONG).show();*/
 
         } else {
 
