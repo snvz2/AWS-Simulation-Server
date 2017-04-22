@@ -21,7 +21,8 @@
         android:layout_height="wrap_content"
         android:text="Button"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"/>
 
 
 </RelativeLayout>
