@@ -18,7 +18,7 @@
         android:textSize="40sp" />
 
     <Button
-        android:id="@+id/button7"
+        android:id="@+id/enableLoc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="150dp"
@@ -27,7 +27,7 @@
         android:textSize="40sp" />
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/disableLoc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="casual"
