@@ -347,7 +347,7 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 convertView = inflater.inflate(layout, parent, false);
                 ViewHolder viewHolder = new ViewHolder();
-                viewHolder.truckName = (TextView) convertView.findViewById(R.id.listName); //Attach names here
+                viewHolder.truckName = (TextView) convertView.findViewById(R.id.listName); //getItem(position) is the whole truck object
                 viewHolder.truckName.setText(getItem(position).getName());
                 viewHolder.truckInfoBtn = (Button) convertView.findViewById(R.id.listBtn);
                 viewHolder.truckInfoBtn.setOnClickListener(new View.OnClickListener(){
