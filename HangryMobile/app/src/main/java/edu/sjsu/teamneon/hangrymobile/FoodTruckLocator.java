@@ -12,17 +12,16 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ListView;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
@@ -83,6 +82,8 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
 
     @Override
     public void onLocationChanged(Location location) {
+        // Clear all previously added markers from the map
+        mMap.clear();
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         if (locationMarker != null) {
             locationMarker.remove();
@@ -91,10 +92,10 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                 new MarkerOptions().position(latLng).title(
                         currentLocation).icon(BitmapDescriptorFactory.defaultMarker(
                                 BitmapDescriptorFactory.HUE_AZURE)));
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
-        mMap.animateCamera(cameraUpdate);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(defaultZoom));
+        CameraUpdate center = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(defaultZoom);
+        mMap.moveCamera(center);
+        mMap.animateCamera(zoom);
         gps.locationManager.removeUpdates(this);
     }
 
@@ -130,11 +131,11 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
             new scanAllTrucks().execute();
             /* Add Markers for newly discovered food trucks */
 
-
+/*
             Toast.makeText(
                     getApplicationContext(),
                     "Your Location is -\nLat: " + latitude + "\nLong: "
-                            + longitude, Toast.LENGTH_LONG).show();
+                            + longitude, Toast.LENGTH_LONG).show();*/
 
         } else {
 
@@ -289,9 +290,6 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         protected void onPostExecute(Void v) {
             /* Remove all truck views */
             infoArray.clear();
-//            frameTruckList.removeAllViews();
-            TextView previous = null;
-            int id = 1;
 
             /* Iterate through all newly discovered trucks */
             for (FoodTruck truck: result) {
@@ -353,6 +351,7 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                 viewHolder.truckInfoBtn.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
+
                         Toast.makeText(getContext(), "Button was clicked for list item " + position, Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -376,7 +375,14 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         truckListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(FoodTruckLocator.this, "List item was clicked at " + position, Toast.LENGTH_SHORT).show();
+                // Get the clicked on food truck and center the map on it
+                FoodTruck foodTruck = infoArray.get(position);
+                LatLng latLng = new LatLng(Float.parseFloat(foodTruck.getLat()),
+                        Float.parseFloat(foodTruck.getLon()));
+                CameraUpdate center = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+                CameraUpdate zoom = CameraUpdateFactory.zoomTo(defaultZoom);
+                mMap.moveCamera(center);
+                mMap.animateCamera(zoom);
             }
         });
 
