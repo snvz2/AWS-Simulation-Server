@@ -47,7 +47,11 @@
         </activity>
         <activity
             android:name=".FoodTruckLocator"
-            android:label="@string/title_activity_food_truck_locator"></activity>
+            android:label="@string/title_activity_food_truck_locator" />
+        <activity
+            android:name=".TruckUI"
+            android:label="@string/title_activity_truck_ui"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

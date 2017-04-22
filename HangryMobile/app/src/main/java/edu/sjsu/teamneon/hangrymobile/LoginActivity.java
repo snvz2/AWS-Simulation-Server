@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private VideoView myVideo;
-    private Button btn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,15 +101,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button btn = (Button)findViewById(R.id.findTruck);
-
-        btn.setOnClickListener(new View.OnClickListener() {
+        Button btnUser = (Button)findViewById(R.id.findTruck);
+        Button btnTruck = (Button)findViewById(R.id.iAmTruck);
+        btnUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, FoodTruckLocator.class));
             }
         });
 
+        btnTruck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, TruckUI.class));
+            }
+        });
         // Set up the login form.
  /*       mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();

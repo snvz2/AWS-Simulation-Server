@@ -74,7 +74,7 @@
         android:layout_marginEnd="8dp" />
 
     <Button
-        android:id="@+id/iAm"
+        android:id="@+id/iAmTruck"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
