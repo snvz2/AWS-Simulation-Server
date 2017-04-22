@@ -138,6 +138,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
     }*/
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(myVideo!=null){
+
+            myVideo.start();
+        }
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(myVideo!=null && myVideo.isPlaying()){
+            myVideo.pause();
+        }
+    }
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
