@@ -51,9 +51,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/h_guideline1"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.67"
-        tools:layout_editor_absoluteY="380dp"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintGuide_percent="0.68" />
 
     <TextView
         android:id="@+id/textView2"
@@ -75,40 +73,50 @@
 
     <Button
         android:id="@+id/iAmTruck"
-        android:layout_width="275dp"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="30dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/iamtruck"
         android:fontFamily="casual"
         android:text="I am a food truck "
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/findTruck" />
 
     <Button
         android:id="@+id/findTruck"
-        android:layout_width="275dp"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="30dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/findtruck"
         android:fontFamily="casual"
         android:text="Find a food truck "
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/googleSignOn" />
 
     <Button
         android:id="@+id/googleSignOn"
-        android:layout_width="275dp"
-        android:layout_height="50dp"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/google_button_bg"
         android:drawableLeft="@mipmap/blackgoogle"
         android:fontFamily="casual"
@@ -118,23 +126,19 @@
         android:textColor="@android:color/black"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/h_guideline1"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline4"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+        app:layout_constraintTop_toTopOf="@+id/h_guideline1" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/guideline4"
-        app:layout_constraintGuide_begin="513dp"
+        app:layout_constraintGuide_begin="550dp"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteY="513dp"
+        tools:layout_editor_absoluteY="550dp"
         tools:layout_editor_absoluteX="0dp" />
 
 
