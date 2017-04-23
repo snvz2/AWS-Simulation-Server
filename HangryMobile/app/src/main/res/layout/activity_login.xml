@@ -17,16 +17,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
         android:layout_height="1dp"
         android:id="@+id/v_guideline1"
         android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.14"
         tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="58dp"
-        app:layout_constraintGuide_percent="0.15104167"/>
+        tools:layout_editor_absoluteX="54dp" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
@@ -51,9 +51,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/h_guideline1"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteY="326dp"
-        tools:layout_editor_absoluteX="0dp"
-        app:layout_constraintGuide_percent="0.5749559"/>
+        app:layout_constraintGuide_percent="0.67"
+        tools:layout_editor_absoluteY="380dp"
+        tools:layout_editor_absoluteX="0dp" />
 
     <TextView
         android:id="@+id/textView2"
@@ -63,40 +63,79 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="cursive"
-        android:paddingTop="50dp"
         android:text="Hangry Mobile"
         android:textColor="@color/common_google_signin_btn_text_dark_default"
         android:textSize="58sp"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/bgVideoView"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
 
     <Button
         android:id="@+id/iAmTruck"
-        android:layout_width="150dp"
+        android:layout_width="275dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="casual"
         android:text="I am a food truck "
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/findTruck" />
 
     <Button
         android:id="@+id/findTruck"
-        android:layout_width="150dp"
+        android:layout_width="275dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="casual"
         android:text="Find a food truck "
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/googleSignOn" />
+
+    <Button
+        android:id="@+id/googleSignOn"
+        android:layout_width="275dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/google_button_bg"
+        android:drawableLeft="@mipmap/blackgoogle"
+        android:fontFamily="casual"
+        android:paddingLeft="5dp"
+        android:text="Sign in with Google"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/h_guideline1"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline4"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline4"
+        app:layout_constraintGuide_begin="513dp"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteY="513dp"
+        tools:layout_editor_absoluteX="0dp" />
 
 
 </android.support.constraint.ConstraintLayout>
