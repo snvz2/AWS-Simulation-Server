@@ -14,6 +14,7 @@ public class FoodTruck {
     private String name;
     private String lon;
     private String lat;
+    private Boolean isTruck;
 
 //    public FoodTruck(String name, String lon, String lat) {
 //        super();
@@ -58,4 +59,14 @@ public class FoodTruck {
     public void setLat(String lat) {
         this.lat = lat;
     }
+
+    @DynamoDBAttribute(attributeName = "isTruck")
+    public Boolean getIsTruck(){
+        return isTruck;
+    }
+
+    public void setIsTruck(Boolean isTruck){
+        this.isTruck = isTruck;
+    }
+
 }

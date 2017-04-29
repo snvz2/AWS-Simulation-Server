@@ -49,6 +49,9 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -96,6 +99,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     //Google Sign in
     private SignInButton signInButton;
     private GoogleApiClient mGoogleApiClient;
+    private GoogleSignInAccount acct;
+
+    //DynamoDB
+    private Boolean exists = null; // Check if account exists on dynamo or not
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -431,15 +438,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
-        Log.d("999999999999999", "handleSignInResult:" + result.isSuccess());
-        if (result.isSuccess()) {
+        Log.wtf("Testing", "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) { // If Google Sign is successful, check to see if the account is already in DynamoDB
+
+            acct = result.getSignInAccount();
+            Log.wtf("TESTING",acct.getId());
+
+            new checkIfAccountExists().execute(acct); // Async call to act depending if acc exists or not
+
+
             // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-            Log.d("999999999999999", "handleSignInResult:" + acct.getDisplayName());
-            Log.d("999999999999999", "handleSignInResult:" + acct.getId());
-            Log.d("999999999999999", "handleSignInResult:" + acct.getAccount());
-            Log.d("999999999999999", "handleSignInResult:" + acct.getEmail());
-            Log.d("999999999999999", "handleSignInResult:" + acct.getPhotoUrl());
+//            Log.wtf("999999999999999", "handleSignInResult:" + acct.getDisplayName());
+//            Log.wtf("999999999999999", "handleSignInResult:" + acct.getId());
+//            Log.wtf("999999999999999", "handleSignInResult:" + acct.getAccount());
+//            Log.wtf("999999999999999", "handleSignInResult:" + acct.getEmail());
+//            Log.wtf("999999999999999", "handleSignInResult:" + acct.getPhotoUrl());
         } else {
             // Signed out, show unauthenticated UI.
         }
@@ -501,6 +514,74 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
 
+    }
+
+    private class checkIfAccountExists extends AsyncTask<GoogleSignInAccount, Integer, Void>{
+        @Override
+        protected Void doInBackground(GoogleSignInAccount... params){
+
+            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+            ManagerClass managerClass = new ManagerClass();
+            CognitoCachingCredentialsProvider credentialsProvider =
+                    managerClass.getCredentials(LoginActivity.this); //Pass in the activity name
+            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+
+            //Selects a truck based on primary key (id) to update
+            FoodTruck truckToUpdate = mapper.load(FoodTruck.class, params[0].getId()); // params[0] is the acct object
+
+            exists = truckToUpdate != null ? true : false;
+
+            if(exists){
+                //Set activity to whatever is returned
+                Log.wtf("Testing", "Truck exists");
+            }
+            else{
+                Log.wtf("Testing", "Added a new truck");
+                FoodTruck newTruck = new FoodTruck();
+                newTruck.setID(acct.getId());
+                newTruck.setIsTruck(true);
+
+                mapper.save(newTruck);
+            }
+
+            Log.wtf("Testing", "Does acct exists: " + exists);
+
+            return null;
+        }
+
+    }
+
+    private class storeTruck extends AsyncTask<GoogleSignInAccount, Integer, Void>{
+        private String truckName;
+        private String truckLon;
+        private String truckLat;
+        public storeTruck(String name, String lon, String lat)
+        {
+            truckName = name;
+            truckLon = lon;
+            truckLat = lat;
+        }
+        @Override
+        protected Void doInBackground(GoogleSignInAccount... params){
+
+            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+            ManagerClass managerClass = new ManagerClass();
+            CognitoCachingCredentialsProvider credentialsProvider =
+                    managerClass.getCredentials(LoginActivity.this); //Pass in the activity name
+            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+
+            //Get values through ID of field or Geo code
+            //Takes in (name, lon, lat
+            FoodTruck newTruck = new FoodTruck();
+            newTruck.setID(acct.getId());
+            newTruck.setIsTruck(true);
+
+            mapper.save(newTruck);
+
+            return null;
+        }
     }
 }
 
