@@ -3,50 +3,34 @@ package edu.sjsu.teamneon.hangrymobile;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.CursorLoader;
+import android.content.Intent;
+import android.content.Loader;
+import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
+import android.database.Cursor;
+import android.graphics.Matrix;
+import android.graphics.SurfaceTexture;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Bundle;
-import android.widget.VideoView;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.os.AsyncTask;
-
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ListView;
-import android.os.Build;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.Surface;
+import android.view.TextureView;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.gms.auth.api.Auth;
@@ -59,6 +43,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +52,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, GoogleApiClient.OnConnectionFailedListener {
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, GoogleApiClient.OnConnectionFailedListener, TextureView.SurfaceTextureListener {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -91,29 +76,29 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private VideoView myVideo;
 
     //Google Sign in
     private SignInButton signInButton;
     private GoogleApiClient mGoogleApiClient;
 
+    // Asset video file name
+    private static final String FILE_NAME = "hangrylogin.mp4";
+
+    // Video Size
+    private float mVideoWidth;
+    private float mVideoHeight;
+
+    // MediaPlayer instance to control playback of video file.
+    private MediaPlayer mMediaPlayer;
+    private TextureView mTextureView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        myVideo = (VideoView) findViewById(R.id.bgVideoView);
-
-        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.hangrylogin);
-
-        myVideo.setVideoURI(uri);
-        myVideo.start();
-
-        myVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mediaPlayer.setLooping(true);
-            }
-        });
+        calculateVideoSize();
+        mTextureView = (TextureView) findViewById(R.id.bgVideoView);
+        mTextureView.setSurfaceTextureListener(LoginActivity.this);
 
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
@@ -159,6 +144,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
+
+
         //Google Sign In code
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -198,22 +185,101 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
     }*/
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(myVideo!=null){
 
-            myVideo.start();
+    /* Background Video Code */
+    private void calculateVideoSize() {
+        try {
+            AssetFileDescriptor afd = getAssets().openFd(FILE_NAME);
+            MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
+            metaRetriever.setDataSource(
+                    afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            String height = metaRetriever
+                    .extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+            String width = metaRetriever
+                    .extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+            mVideoHeight = Float.parseFloat(height);
+            mVideoWidth = Float.parseFloat(width);
+
+        } catch (IOException e) {
+            Log.wtf("IO", e.getMessage());
+        } catch (NumberFormatException e) {
+            Log.wtf("NumberFormat", e.getMessage());
+        }
+    }
+
+    private void updateTextureViewSize(int viewWidth, int viewHeight) {
+        float scaleX = 0.45f;
+        float scaleY = 0.45f;
+
+        if (mVideoWidth > viewWidth && mVideoHeight > viewHeight) {
+            scaleX = scaleX * (mVideoWidth / viewWidth);
+            scaleY = scaleY * (mVideoHeight / viewHeight);
+        } else if (mVideoWidth < viewWidth && mVideoHeight < viewHeight) {
+            scaleY = scaleY * (viewWidth / mVideoWidth);
+            scaleX = scaleX * (viewHeight / mVideoHeight);
+        } else if (viewWidth > mVideoWidth) {
+            scaleY = scaleY * (viewWidth / mVideoWidth) / (viewHeight / mVideoHeight);
+        } else if (viewHeight > mVideoHeight) {
+            scaleX = scaleX * (viewHeight / mVideoHeight) / (viewWidth / mVideoWidth);
         }
 
+        // Calculate pivot points, in our case crop from center
+        int pivotPointX = viewWidth / 2;
+        int pivotPointY = viewHeight / 2;
+
+        Matrix matrix = new Matrix();
+        matrix.setScale(scaleX, scaleY, pivotPointX, pivotPointY);
+
+        mTextureView.setTransform(matrix);
+        mTextureView.setLayoutParams(new ConstraintLayout.LayoutParams(viewWidth, viewHeight));
     }
+
     @Override
-    protected void onPause() {
-        super.onPause();
-        if(myVideo!=null && myVideo.isPlaying()){
-            myVideo.pause();
+    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
+        Surface surface = new Surface(surfaceTexture);
+
+        try {
+            updateTextureViewSize(width, height);
+            AssetFileDescriptor afd = getAssets().openFd(FILE_NAME);
+            mMediaPlayer = new MediaPlayer();
+            mMediaPlayer
+                    .setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            mMediaPlayer.setSurface(surface);
+            mMediaPlayer.setLooping(true);
+
+            mMediaPlayer.prepareAsync();
+
+            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    mediaPlayer.start();
+                }
+            });
+
+        } catch (IllegalArgumentException e) {
+            Log.wtf("IllegalArgument", e.getMessage());
+        } catch (SecurityException e) {
+            Log.wtf("Security", e.getMessage());
+        } catch (IllegalStateException e) {
+            Log.wtf("State", e.getMessage());
+        } catch (IOException e) {
+            Log.wtf("IO", e.getMessage());
         }
     }
+
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int width, int height) {
+    }
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+        return true;
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+    }
+
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
