@@ -448,11 +448,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
             // Signed in successfully, show authenticated UI.
-//            Log.wtf("999999999999999", "handleSignInResult:" + acct.getDisplayName());
-//            Log.wtf("999999999999999", "handleSignInResult:" + acct.getId());
-//            Log.wtf("999999999999999", "handleSignInResult:" + acct.getAccount());
-//            Log.wtf("999999999999999", "handleSignInResult:" + acct.getEmail());
-//            Log.wtf("999999999999999", "handleSignInResult:" + acct.getPhotoUrl());
+            Log.wtf("999999999999999", "handleSignInResult:" + acct.getDisplayName());
+            Log.wtf("999999999999999", "handleSignInResult:" + acct.getId());
+            Log.wtf("999999999999999", "handleSignInResult:" + acct.getAccount());
+            Log.wtf("999999999999999", "handleSignInResult:" + acct.getEmail());
+            Log.wtf("999999999999999", "handleSignInResult:" + acct.getPhotoUrl());
         } else {
             // Signed out, show unauthenticated UI.
         }
@@ -531,6 +531,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             FoodTruck truckToUpdate = mapper.load(FoodTruck.class, params[0].getId()); // params[0] is the acct object
 
             exists = truckToUpdate != null ? true : false;
+            Log.wtf("Testing", "Does acct exists in DB: " + exists);
 
             if(exists){
                 //Set activity to whatever is returned
@@ -540,48 +541,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Log.wtf("Testing", "Added a new truck");
                 FoodTruck newTruck = new FoodTruck();
                 newTruck.setID(acct.getId());
-                newTruck.setIsTruck(true);
+                newTruck.setIsTruck(true);//Depends on what the activity sends back
 
                 mapper.save(newTruck);
             }
 
-            Log.wtf("Testing", "Does acct exists: " + exists);
-
             return null;
         }
 
     }
 
-    private class storeTruck extends AsyncTask<GoogleSignInAccount, Integer, Void>{
-        private String truckName;
-        private String truckLon;
-        private String truckLat;
-        public storeTruck(String name, String lon, String lat)
-        {
-            truckName = name;
-            truckLon = lon;
-            truckLat = lat;
-        }
-        @Override
-        protected Void doInBackground(GoogleSignInAccount... params){
-
-            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
-            ManagerClass managerClass = new ManagerClass();
-            CognitoCachingCredentialsProvider credentialsProvider =
-                    managerClass.getCredentials(LoginActivity.this); //Pass in the activity name
-            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
-            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
-
-            //Get values through ID of field or Geo code
-            //Takes in (name, lon, lat
-            FoodTruck newTruck = new FoodTruck();
-            newTruck.setID(acct.getId());
-            newTruck.setIsTruck(true);
-
-            mapper.save(newTruck);
-
-            return null;
-        }
-    }
 }
 

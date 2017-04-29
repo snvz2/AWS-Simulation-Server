@@ -239,8 +239,8 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
             DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
 
             //Selects a truck based on primary key (id) to update
-            FoodTruck truckToUpdate = mapper.load(FoodTruck.class, 3);
-            truckToUpdate.setName("New truck name");
+            FoodTruck truckToUpdate = mapper.load(FoodTruck.class, "2");
+            truckToUpdate.setName("New truck");
 
             mapper.save(truckToUpdate);
 
