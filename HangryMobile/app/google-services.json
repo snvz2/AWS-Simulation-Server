@@ -13,11 +13,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "1071527649115-4euvb8k62h4iasmc6hleadaeqsaa38l1.apps.googleusercontent.com",
+          "client_id": "1071527649115-7ns8e3q8a8qldvgk21dm7ouhr4imrfli.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "edu.sjsu.teamneon.hangrymobile",
-            "certificate_hash": "1858e0ce36034934f24744afa495000335c37108"
+            "certificate_hash": "8431e85807e67cb16ca3921b1f7ba57d10ab49c1"
           }
         },
         {

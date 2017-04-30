@@ -32,6 +32,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
@@ -509,7 +510,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             acct = result.getSignInAccount();
             Log.wtf("TESTING",acct.getId());
-
+            Toast.makeText(getApplicationContext() ,"Login Success!", Toast.LENGTH_SHORT).show();
             new checkIfAccountExists().execute(acct); // Async call to act depending if acc exists or not
 
 
@@ -521,6 +522,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             Log.wtf("999999999999999", "handleSignInResult:" + acct.getPhotoUrl());
         } else {
             // Signed out, show unauthenticated UI.
+            Toast.makeText(getApplicationContext() ,"Login Failed!", Toast.LENGTH_SHORT).show();
         }
     }
 
