@@ -12,8 +12,6 @@ namespace AwsSimServer
 {
     public partial class Program
     {
-        // public static readonly RegionEndpoint USEast1;// = "us-east";
-        //public abstract class AWSCredentials;
         public static Table GetTableObject(string tableName)
         {
 
