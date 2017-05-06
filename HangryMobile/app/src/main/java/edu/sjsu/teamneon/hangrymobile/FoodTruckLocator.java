@@ -2,6 +2,7 @@ package edu.sjsu.teamneon.hangrymobile;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -21,7 +22,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
@@ -351,8 +351,8 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                 viewHolder.truckInfoBtn.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
-
-                        Toast.makeText(getContext(), "Button was clicked for list item " + position, Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(FoodTruckLocator.this, FoodTruckProfile.class));
+                        //Toast.makeText(getContext(), "Button was clicked for list item " + position, Toast.LENGTH_SHORT).show();
                     }
                 });
                 convertView.setTag(viewHolder);
