@@ -10,5 +10,4 @@ public class FoodTruckProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_truck_profile);
     }
-
 }
