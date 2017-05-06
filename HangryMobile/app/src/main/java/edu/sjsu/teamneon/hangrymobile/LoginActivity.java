@@ -611,7 +611,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 newTruck.setID(acct.getId());
                 newTruck.setIsTruck(true);//Depends on what the activity sends back
 
-                mapper.save(newTruck);
+                //mapper.save(newTruck);
             }
 
             return null;
