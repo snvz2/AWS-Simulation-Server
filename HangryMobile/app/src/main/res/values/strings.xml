@@ -3,8 +3,11 @@
     <string name="title_activity_food_truck_locator">Map</string>
     <string name="current_location">Current Location</string>
     <string name="gps_activity_food_truck_locator">Update Location</string>
-    <string name="default_zoom">15.0</string>
     <string name="title_activity_login">Sign in</string>
+
+    <!-- Constants -->
+    <string name="default_zoom">15.0</string>
+    <string name="food_truck_object_key">foodTruckObject</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

@@ -351,7 +351,14 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                 viewHolder.truckInfoBtn.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
-                        startActivity(new Intent(FoodTruckLocator.this, FoodTruckProfile.class));
+                        FoodTruck foodTruck = infoArray.get(position);
+                        Intent truckProfileIntent = new Intent();
+                        Bundle truckProfileBundle = new Bundle();
+                        String key = getResources().getString(R.string.food_truck_object_key);
+                        truckProfileBundle.putParcelable(key, foodTruck);
+                        truckProfileIntent.putExtras(truckProfileBundle);
+                        truckProfileIntent.setClass(FoodTruckLocator.this, FoodTruckProfile.class);
+                        startActivity(truckProfileIntent);
                         //Toast.makeText(getContext(), "Button was clicked for list item " + position, Toast.LENGTH_SHORT).show();
                     }
                 });
