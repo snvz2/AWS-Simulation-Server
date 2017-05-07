@@ -27,7 +27,7 @@ public class GPSTracker extends Service implements LocationListener {
 
     boolean isGPSEnabled = false;
     boolean isNetworkEnabled = false;
-    boolean canGetLocation = false;
+    public boolean canGetLocation = false;
 
     Location location;
 

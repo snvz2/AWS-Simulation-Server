@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
@@ -117,10 +118,18 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
     public void updatePos() {
         gps = new GPSTracker(FoodTruckLocator.this);
 
+        gps.getLocation();
         requestPerms();
         if(gps.canGetLocation() && hasPermissions()) {
-            onLocationChanged(gps.getLocation());
-            gps.getLocation();
+
+            //This try catch is to fix emulator GPS problem where first run doesn't provide coordinates
+            try {
+                onLocationChanged(gps.getLocation());
+            }
+            catch (Exception e){
+                Toast.makeText(getApplicationContext(), "Emulator coordinates not set first run!", Toast.LENGTH_SHORT).show();
+            }
+            //gps.getLocation();
             double latitude = gps.getLatitude();
             double longitude = gps.getLongitude();
             /* If we have prior markers, free them now */
