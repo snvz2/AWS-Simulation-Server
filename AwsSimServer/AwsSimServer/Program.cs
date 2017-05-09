@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Xml;
-
+using System.Text.RegularExpressions;
 
 namespace AwsSimServer
 {
@@ -20,6 +20,7 @@ namespace AwsSimServer
             try
             {
                 client = new AmazonDynamoDBClient("AKIAJSXUSFFBXHMXK7LA", "r1RkV4lXb0QOfnoW8O1ftgko+cXvHFyrqZkG/lSS", RegionEndpoint.USEast1);
+                Console.WriteLine("Connected to AWS");
             }
             catch (Exception ex)
             {
@@ -31,20 +32,29 @@ namespace AwsSimServer
             try
             {
                 table = Table.LoadTable(client, tableName);
+                Console.WriteLine("Loaded Table");
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                Console.WriteLine("Failed to Load Table");
                 return (null);
             }
 
             return (table);
         }
+
+        public static async void ServeFood()
+        {
+            Console.WriteLine(" =======  Serving Food Now  ============");
+            System.Threading.Thread.Sleep(5000000);
+        }
         static void Main(string[] args)
         {
 
             string agt_table = "Trucks";
-            string jsonfile = "id4.json"; // path + args[i] + @".json";
+            string jsonDirectory = @"..\..\json";
+            var jsonFiles = Directory.EnumerateFiles(jsonDirectory, "*.json");
             /*
                *  Insert into DynamoDB using dynamodb profile
             */
@@ -52,26 +62,31 @@ namespace AwsSimServer
             StreamReader sr = null;
             JsonTextReader jtr = null;
             JArray recordArray = null;
-            // First, read in the JSON data from the DynamoDBInput.json file
-            try
+            // First, read in the JSON data from the .json file
+            foreach (string jsonFile in jsonFiles)
             {
-                sr = new StreamReader(jsonfile);
-                jtr = new JsonTextReader(sr);
-                recordArray = (JArray)JToken.ReadFrom(jtr);
-                Console.WriteLine(recordArray.ToString());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("\n Error: can not read from the JSON file, " + ex.Message);
-            }
-            finally
-            {
-                if (jtr != null)
-                    jtr.Close();
-                if (sr != null)
-                    sr.Close();
-                Console.WriteLine("\n finally");
-            }
+                Console.WriteLine(jsonFile);
+                try
+                {
+                    sr = new StreamReader(jsonFile);
+                    jtr = new JsonTextReader(sr);
+                    recordArray = (JArray)JToken.ReadFrom(jtr);
+                    Console.WriteLine(recordArray.ToString());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("\n Error: can not read from the JSON file, " + ex.Message);
+                    //HungryMobile\AwsSimServer\AwsSimServer\bin\json\id4.json'.
+                }
+                finally
+                {
+                    if (jtr != null)
+                        jtr.Close();
+                    if (sr != null)
+                        sr.Close();
+                    Console.WriteLine("\n finally");
+                }
+
             // Get a Table object for the table that created in Step 1
             Table table = GetTableObject(agt_table);
             if (table == null)
@@ -89,7 +104,7 @@ namespace AwsSimServer
             {
                 try
                 {
-                    Console.WriteLine("\n put item");
+                    //Console.WriteLine("\n put item");
                     string itemJson = recordArray[y].ToString();
                     Document doc3 = Document.FromJson(itemJson);
                     table.PutItem(doc3);
@@ -110,9 +125,11 @@ namespace AwsSimServer
                     j += 99;
                 }
             }
-            Console.WriteLine("\n   Finished writing all records to DynamoDB!");
+            Console.WriteLine("\n   Finished updating DynamoDB!");
+            // Sleep or Move to a new location
+            ServeFood();
 
-        //
+        } // for loop
         PauseForDebugWindow:
             Console.Write("\n\n Debug...Press any key");
             Console.ReadKey();
