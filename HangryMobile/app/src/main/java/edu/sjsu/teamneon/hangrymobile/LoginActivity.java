@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
-
+/*
         Button btnSignOut = (Button)findViewById(R.id.googleSignOn);
         Button btnUser = (Button)findViewById(R.id.findTruck);
         Button btnTruck = (Button)findViewById(R.id.iAmTruck);
@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             }
                         });
             }
-        });
+        });*/
 
         signInButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -520,6 +520,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             Log.wtf("999999999999999", "handleSignInResult:" + acct.getAccount());
             Log.wtf("999999999999999", "handleSignInResult:" + acct.getEmail());
             Log.wtf("999999999999999", "handleSignInResult:" + acct.getPhotoUrl());
+
+            startActivity(new Intent(LoginActivity.this, isTruck.class));
         } else {
             // Signed out, show unauthenticated UI.
             Toast.makeText(getApplicationContext() ,"Login Failed!", Toast.LENGTH_SHORT).show();
