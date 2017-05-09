@@ -44,92 +44,119 @@ namespace AwsSimServer
             return (table);
         }
 
-        public static async void ServeFood()
+        public static void ServeFood (string jsonData) //(string[] menu)
         {
-            Console.WriteLine(" =======  Serving Food Now  ============");
-            System.Threading.Thread.Sleep(5000000);
+
+            Console.WriteLine(jsonData);
+            Console.WriteLine("\n\n\n==========================================================================");
+            Console.WriteLine("==========================================================================");
+            Console.WriteLine("             MOVING TO ANOTHER LOCATION and UPDATING MENU ");
+            Console.WriteLine("==========================================================================");
+            Console.WriteLine("==========================================================================\n\n\n");
+            // get json data
+            JObject o = JObject.Parse(jsonData.TrimStart('[').TrimEnd(']'));
+            var name = o.SelectToken("name");
+            var rating = o.SelectToken("avgRating");
+            var drinks = o.SelectToken("Menu.Drink");
+            var food = o.SelectToken("Menu.Food");
+            Console.WriteLine("+++++++++++++++ '" + name + "' Truck +++++++++++++++\n\n"); 
+
+            // serving food at each location for 30 seconds (30000 milsecs) then moving to a new location
+            for (var i = 0; i < 7; i++)
+            {
+                Console.WriteLine("==========================================================================");
+                Console.WriteLine("" + i + ". TRUCK '" + name +"': Serving Food Now. TIME: " + DateTime.Now.ToLongTimeString() + " ");
+                Console.WriteLine("==========================================================================\n\n");
+                Console.WriteLine("     RATING: " + rating);
+                Console.WriteLine("\n\n     DRINKS: " + drinks);
+                Console.WriteLine("\n\n     FOOD: " + food);
+                System.Threading.Thread.Sleep(3000);
+            }
         }
         static void Main(string[] args)
         {
-
             string agt_table = "Trucks";
             string jsonDirectory = @"..\..\json";
-            var jsonFiles = Directory.EnumerateFiles(jsonDirectory, "*.json");
+            
             /*
-               *  Insert into DynamoDB using dynamodb profile
+            *  Insert into DynamoDB using dynamodb profile
             */
             // JSON to DynamoDB write
             StreamReader sr = null;
             JsonTextReader jtr = null;
             JArray recordArray = null;
-            // First, read in the JSON data from the .json file
-            foreach (string jsonFile in jsonFiles)
+            // Read in the JSON data from the .json file
+            for (;;)
             {
-                Console.WriteLine(jsonFile);
-                try
+                var jsonFiles = Directory.EnumerateFiles(jsonDirectory, "*.json");
+                foreach (string jsonFile in jsonFiles)
                 {
-                    sr = new StreamReader(jsonFile);
-                    jtr = new JsonTextReader(sr);
-                    recordArray = (JArray)JToken.ReadFrom(jtr);
-                    Console.WriteLine(recordArray.ToString());
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("\n Error: can not read from the JSON file, " + ex.Message);
-                    //HungryMobile\AwsSimServer\AwsSimServer\bin\json\id4.json'.
-                }
-                finally
-                {
-                    if (jtr != null)
-                        jtr.Close();
-                    if (sr != null)
-                        sr.Close();
-                    Console.WriteLine("\n finally");
-                }
+                    Console.WriteLine(jsonFile);
 
-            // Get a Table object for the table that created in Step 1
-            Table table = GetTableObject(agt_table);
-            if (table == null)
-            {
-                Console.WriteLine("\n Error getting GetTableObject");
-                goto PauseForDebugWindow;
-            }
-            else
-            {
-                Console.WriteLine("\n OK getting GetTableObject");
-            }
-            // Load the data into the table (this could take some time)
-            Console.Write("\n   Now writing {0:#,##0} records from JSON (might take 15 minutes)...\n   ...completed: ", recordArray.Count);
-            for (int y = 0, j = 99; y < recordArray.Count; y++)
-            {
-                try
-                {
-                    //Console.WriteLine("\n put item");
-                    string itemJson = recordArray[y].ToString();
-                    Document doc3 = Document.FromJson(itemJson);
-                    table.PutItem(doc3);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("\nError: Could not write the record #{0:#,##0}, because {1}", y, ex.Message);
-                    goto PauseForDebugWindow;
-                }
-                if (y >= j)
-                {
-                    j++;
-                    Console.Write("{0,5:#,##0}, ", j);
-                    if (j % 1000 == 0)
+                    try
                     {
-                        Console.Write("\n                 ");
+                        sr = new StreamReader(jsonFile);
+                        jtr = new JsonTextReader(sr);
+                        recordArray = (JArray)JToken.ReadFrom(jtr);
+                        Console.WriteLine(recordArray.ToString());
                     }
-                    j += 99;
-                }
-            }
-            Console.WriteLine("\n   Finished updating DynamoDB!");
-            // Sleep or Move to a new location
-            ServeFood();
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("\n Error: can not read from the JSON file, " + ex.Message);
+                    }
+                    finally
+                    {
+                        if (jtr != null)
+                            jtr.Close();
+                        if (sr != null)
+                            sr.Close();
+                        Console.WriteLine("\n finally");
+                    }
 
-        } // for loop
+                    // Get a Table object for the table that created in Step 1
+                    Table table = GetTableObject(agt_table);
+                    if (table == null)
+                    {
+                        Console.WriteLine("\n Error getting GetTableObject");
+                        goto PauseForDebugWindow;
+                    }
+                    else
+                    {
+                        Console.WriteLine("\n getting GetTableObject");
+                    }
+                    // Load the data into the table (this could take some time)
+                    Console.Write("\n   Now writing {0:#,##0} records from JSON (might take 15 minutes)...\n   ...completed: ", recordArray.Count);
+                    for (int y = 0, j = 99; y < recordArray.Count; y++)
+                    {
+                        try
+                        {
+                            Console.WriteLine("\n put item");
+                            string itemJson = recordArray[y].ToString();
+                            Document doc3 = Document.FromJson(itemJson);
+                            table.PutItem(doc3);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("\nError: Could not write the record #{0:#,##0}, because {1}", y, ex.Message);
+                            goto PauseForDebugWindow;
+                        }
+                        if (y >= j)
+                        {
+                            j++;
+                            Console.Write("{0,5:#,##0}, ", j);
+                            if (j % 1000 == 0)
+                            {
+                                Console.Write("\n                 ");
+                            }
+                            j += 99;
+                        }
+                    }
+                    Console.WriteLine("\n   Finished updating DynamoDB!");
+                    // Sleep or Move to a new location
+                     ServeFood(recordArray.ToString());
+
+                } // for loop
+            } // infinite loop
         PauseForDebugWindow:
             Console.Write("\n\n Debug...Press any key");
             Console.ReadKey();

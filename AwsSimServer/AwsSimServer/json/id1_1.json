@@ -3,8 +3,8 @@
   "avgRating": "4.10",
   "description": "Simple Description",
   "id": "1",
-  "lat": "37.3389585",
-  "lon": "-121.8811071",
+  "lat": "37.337380",  
+  "lon": "-121.887935",
   "Menu": {
     "Drink": {
       "Tea": "3.00",

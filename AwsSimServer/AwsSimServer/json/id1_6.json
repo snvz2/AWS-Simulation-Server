@@ -1,18 +1,18 @@
 [
 {
-  "avgRating": "5.00",
+  "avgRating": "1.35",
   "description": "Simple Description",
   "id": "1",
-  "lat": "37.332274",    
-  "lon": "-121.886233",
+  "lat": "37.337855",  
+  "lon": "-121.877969",
   "Menu": {
     "Drink": {
-      "Coke": "3.00",
-      "Water": "1.20"
+      "Lemonade": "4.00",
+      "Water": "2.00"
     },
     "Food": {
-      "Corn Dog": "2.00",
-      "Veggies": "3.00"
+      "Tofu Taco": "2.00",
+      "Rice": "2.00"
     }
   },
   "name": "North Garage Tacos",
