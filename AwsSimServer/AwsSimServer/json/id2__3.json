@@ -1,0 +1,27 @@
+[
+{
+  "avgRating": "2.00",
+  "description": "Simple Description",
+  "id": "2",
+  "lat": "37.3351",
+  "lon": "-121.8817",
+  "Menu": {
+    "Drink": {
+      "Ice Tea": "2.55",
+      "Water": "1.00"
+    },
+    "Food": {
+      "Chips": "1.00",
+      "Hot Dog": "2.00"
+    }
+  },
+  "name": "New truck",
+  "rating": {
+    "1": 2,
+    "2": 2,
+    "3": 3,
+    "4": 2,
+    "5": 1
+  }
+}
+]

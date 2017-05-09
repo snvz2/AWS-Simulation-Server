@@ -1,0 +1,27 @@
+[
+{
+  "avgRating": "2.00",
+  "description": "Simple Description",
+  "id": "6",
+  "lat": "37.339114",
+  "lon": "-121.807682",
+  "Menu": {
+    "Drink": {
+      "Ice Tea": "1.25",
+      "Water": "2.00"
+    },
+    "Food": {
+      "Macaroni Salad": "5.00",
+      "Green Salad": "4.00"
+    }
+  },
+  "name": "Testing1",
+  "rating": {
+    "1": 2,
+    "2": 1,
+    "3": 3,
+    "4": 2,
+    "5": 2
+  }
+}
+]
