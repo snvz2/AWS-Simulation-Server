@@ -1,0 +1,27 @@
+[
+{
+  "avgRating": "4.10",
+  "description": "Simple Description",
+  "id": "1",
+  "lat": "37.3389585",
+  "lon": "-121.8811071",
+  "Menu": {
+    "Drink": {
+      "Tea": "3.00",
+      "Water": "5.00"
+    },
+    "Food": {
+      "Beef": "2.00",
+      "Turkey": "3.00"
+    }
+  },
+  "name": "North Garage Tacos",
+  "rating": {
+    "1": 5,
+    "2": 2,
+    "3": 5,
+    "4": 5,
+    "5": 4
+  }
+}
+]

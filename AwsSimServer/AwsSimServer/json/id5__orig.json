@@ -1,0 +1,27 @@
+[
+{
+  "avgRating": "3.60",
+  "description": "Simple Description",
+  "id": "5",
+  "lat": "37.339",
+  "lon": "-121.80",
+  "Menu": {
+    "Drink": {
+      "Soda": "3.00",
+      "Water": "4.00"
+    },
+    "Food": {
+      "Chicken": "5.00",
+      "Turkey": "6.00"
+    }
+  },
+  "name": "SJSU Tacos",
+  "rating": {
+    "1": 0,
+    "2": 0,
+    "3": 3,
+    "4": 1,
+    "5": 1
+  }
+}
+]
