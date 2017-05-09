@@ -26,7 +26,6 @@ namespace AwsSimServer
                 Console.WriteLine(ex);
                 return (null);
             }
-
             // Now, create a Table object for the specified table
             Table table;
             try
@@ -47,9 +46,7 @@ namespace AwsSimServer
             string agt_table = "Trucks";
             string jsonfile = "id4.json"; // path + args[i] + @".json";
             /*
-               *
                *  Insert into DynamoDB using dynamodb profile
-               * 
             */
             // JSON to DynamoDB write
             StreamReader sr = null;
