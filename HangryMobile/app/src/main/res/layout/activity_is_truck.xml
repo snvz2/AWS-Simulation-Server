@@ -7,45 +7,83 @@
     tools:context="edu.sjsu.teamneon.hangrymobile.isTruck">
 
     <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="41dp"
+        android:fontFamily="casual"
+        android:text="Hangry"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:textSize="58sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@+id/bgVideoView"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/imageView4"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintHorizontal_bias="0.378"
+        android:layout_marginBottom="13dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="111dp"
+        android:layout_height="132dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/v_guideline3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/hangry_launcher" />
+
+    <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="161dp"
         android:fontFamily="casual"
-        android:text="Are you a truck driver? "
-        android:textSize="30sp"
+        android:text="Are you a truck driver?"
+        android:textAlignment="center"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:textSize="31sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/truck10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_width="256dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="18dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:background="@drawable/findtruck"
+        android:fontFamily="casual"
         android:text="Yes!"
-        android:textColor="@color/common_google_signin_btn_text_dark_focused"
-        android:textSize="25sp"
+        android:textSize="40sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintHorizontal_bias="0.533"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
     <Button
         android:id="@+id/user10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="256dp"
+        android:layout_height="50dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="18dp"
         android:background="@drawable/iamtruck"
+        android:fontFamily="casual"
         android:text="NO!"
-        android:textColor="@color/common_google_signin_btn_text_dark_focused"
-        android:textSize="25sp"
+        android:textSize="40sp"
+        app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
@@ -54,6 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/guideline"
-        app:layout_constraintGuide_begin="267dp"
+        app:layout_constraintGuide_begin="326dp"
         android:orientation="horizontal" />
+
 </android.support.constraint.ConstraintLayout>
