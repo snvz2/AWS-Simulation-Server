@@ -322,12 +322,10 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                                 truck.getName())));
 
                 //Scan each truck to list view adapter
-                FoodTruck truckToAdd = new FoodTruck();
-                truckToAdd.setName(truck.getName());
-                truckToAdd.setLat(truck.getLat());
-                truckToAdd.setLon(truck.getLon());
-                infoArray.add(truckToAdd);
+
+
                 populateListView();
+                infoArray.add(truck);
                 /* Create a truck view and add it to LinearLayout */
 //                TextView truckView = new TextView(FoodTruckLocator.this);
 //                truckView.setTextSize(30);
