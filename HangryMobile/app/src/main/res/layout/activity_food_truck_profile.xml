@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorAccent">
 
     <ImageView
         android:id="@+id/imageView"
@@ -35,12 +36,12 @@
 
     <RatingBar
         android:id="@+id/ratingBar"
-        android:stepSize="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/imageView" />
+        android:layout_below="@+id/imageView"
+        android:stepSize="1" />
 
     <TextView
         android:id="@+id/truckName"
