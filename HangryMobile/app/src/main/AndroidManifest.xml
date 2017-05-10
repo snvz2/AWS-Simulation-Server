@@ -51,6 +51,10 @@
             android:label="@string/title_activity_truck_ui"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".TruckUIWeb"
+            android:label="@string/title_activity_truck_ui2"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".FoodTruckProfile"
             android:label="@string/title_activity_food_truck_profile"
             android:parentActivityName=".FoodTruckLocator"

@@ -22,5 +22,6 @@
         completions."
     </string>
     <string name="title_activity_truck_ui">TruckUI</string>
+    <string name="title_activity_truck_ui2">TruckUIWeb</string>
     <string name="title_activity_food_truck_profile">FoodTruckProfile</string>
 </resources>
