@@ -21,7 +21,8 @@ public class FoodTruck implements Parcelable {
     private String lon;
     private String lat;
     private Integer isTruck; //Truck owner or customer
-//    private List<Map<String, Integer>> rating;
+    private Map<String, Map<String, String>> menu;
+    private Map<String, Integer> rating;
 
 //    public FoodTruck(String name, String lon, String lat) {
 //        super();
@@ -100,11 +101,25 @@ public class FoodTruck implements Parcelable {
     public void setIsTruck(Integer isTruck){
         this.isTruck = isTruck;
     }
-//
-//    @DynamoDBAttribute(attributeName = "rating")
-//    public List<Map<String,Integer>> getRating(){
-//        return rating;
-//    }
+
+    @DynamoDBAttribute(attributeName = "Menu")
+    public Map<String, Map<String, String>> getMenu(){
+        return menu;
+    }
+
+    public void setMenu(Map<String, Map<String, String>> menu){
+        this.menu = menu;
+    }
+
+    @DynamoDBAttribute(attributeName = "rating")
+    public Map<String, Integer> getRating(){
+        return rating;
+    }
+
+    public void setRating(Map<String, Integer> rating){
+        this.rating = rating;
+    }
+
 
 
     @Override
