@@ -96,10 +96,9 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                 new MarkerOptions().position(latLng).title(
                         currentLocation).icon(BitmapDescriptorFactory.defaultMarker(
                                 BitmapDescriptorFactory.HUE_AZURE)));
-        CameraUpdate center = CameraUpdateFactory.newLatLngZoom(latLng, 10);
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(defaultZoom);
-        mMap.moveCamera(center);
-        mMap.animateCamera(zoom);
+        CameraUpdate zoomCenter = CameraUpdateFactory.newLatLngZoom(latLng,defaultZoom);
+        mMap.animateCamera(zoomCenter);
+        mMap.moveCamera(zoomCenter);
         gps.locationManager.removeUpdates(this);
     }
 
@@ -407,10 +406,11 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                 FoodTruck foodTruck = infoArray.get(position);
                 LatLng latLng = new LatLng(Float.parseFloat(foodTruck.getLat()),
                         Float.parseFloat(foodTruck.getLon()));
-                CameraUpdate center = CameraUpdateFactory.newLatLngZoom(latLng, 10);
-                CameraUpdate zoom = CameraUpdateFactory.zoomTo(defaultZoom);
-                mMap.moveCamera(center);
-                mMap.animateCamera(zoom);
+
+                CameraUpdate zoomCenter = CameraUpdateFactory.newLatLngZoom(latLng,defaultZoom);
+                mMap.animateCamera(zoomCenter);
+                mMap.moveCamera(zoomCenter);
+
             }
         });
 
