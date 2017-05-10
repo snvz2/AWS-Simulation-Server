@@ -5,6 +5,9 @@ import android.os.Parcelable;
 
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
 
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * Created by danieltam on 3/11/17.
@@ -13,18 +16,19 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
 
 @DynamoDBTable(tableName = "Trucks")
 public class FoodTruck implements Parcelable {
-    private String id;
-    private String name;
+    private String id; //Google account's ID
+    private String name; //Truck name
     private String lon;
     private String lat;
-    private Boolean isTruck;
+    private Integer isTruck; //Truck owner or customer
+//    private List<Map<String, Integer>> rating;
 
-    public FoodTruck(String name, String lon, String lat) {
-        super();
-        this.name = name;
-        this.lon = lon;
-        this.lat = lat;
-    }
+//    public FoodTruck(String name, String lon, String lat) {
+//        super();
+//        this.name = name;
+//        this.lon = lon;
+//        this.lat = lat;
+//    }
 
     public FoodTruck() {
         super();
@@ -89,13 +93,19 @@ public class FoodTruck implements Parcelable {
     }
 
     @DynamoDBAttribute(attributeName = "isTruck")
-    public Boolean getIsTruck(){
+    public Integer getIsTruck(){
         return isTruck;
     }
 
-    public void setIsTruck(Boolean isTruck){
+    public void setIsTruck(Integer isTruck){
         this.isTruck = isTruck;
     }
+//
+//    @DynamoDBAttribute(attributeName = "rating")
+//    public List<Map<String,Integer>> getRating(){
+//        return rating;
+//    }
+
 
     @Override
     public int describeContents() {

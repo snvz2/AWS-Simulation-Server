@@ -79,4 +79,20 @@ public class isTruck extends AppCompatActivity {
             }
         });
     }
+
+        //Add new truck based on what the user clicks.
+//    private class addNewTruck extends AsyncTask<Void, Integer, Void> {
+//        @Override
+//        protected Void doInBackground(Void... params) {
+//
+//            Log.wtf("Testing", "Added a new truck");
+//            FoodTruck newTruck = new FoodTruck();
+//            newTruck.setID(acct.getId());
+//            newTruck.setIsTruck(false);//Depends on what the activity sends back
+//
+//            mapper.save(newTruck);
+//
+//            return null;
+//        }
+// }
 }

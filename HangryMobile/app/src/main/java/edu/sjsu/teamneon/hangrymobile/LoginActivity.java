@@ -100,6 +100,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private MediaPlayer mMediaPlayer;
     private TextureView mTextureView;
 
+    //For DynamoDB
+    private ManagerClass managerClass;
+    private CognitoCachingCredentialsProvider credentialsProvider;
+    private AmazonDynamoDBClient ddbClient;
+    private DynamoDBMapper mapper;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +117,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
+
+        //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+        managerClass = new ManagerClass();
+        credentialsProvider =
+                managerClass.getCredentials(LoginActivity.this); //Pass in the activity name
+        ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+        mapper = new DynamoDBMapper(ddbClient);
 /*
         Button btnSignOut = (Button)findViewById(R.id.googleSignOn);
         Button btnUser = (Button)findViewById(R.id.findTruck);
@@ -141,9 +155,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });*/
 
-        signInButton.setOnClickListener(new View.OnClickListener(){
+        signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.sign_in_button:
                         signIn();
@@ -151,7 +165,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             }
         });
-
 
 
         //Google Sign In code
@@ -509,8 +522,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (result.isSuccess()) { // If Google Sign is successful, check to see if the account is already in DynamoDB
 
             acct = result.getSignInAccount();
-            Log.wtf("TESTING",acct.getId());
-            Toast.makeText(getApplicationContext() ,"Login Success!", Toast.LENGTH_SHORT).show();
+            Log.wtf("TESTING", acct.getId());
+            Toast.makeText(getApplicationContext(), "Login Success!", Toast.LENGTH_SHORT).show();
             new checkIfAccountExists().execute(acct); // Async call to act depending if acc exists or not
 
 
@@ -521,10 +534,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             Log.wtf("999999999999999", "handleSignInResult:" + acct.getEmail());
             Log.wtf("999999999999999", "handleSignInResult:" + acct.getPhotoUrl());
 
-            startActivity(new Intent(LoginActivity.this, isTruck.class));
+            //startActivity(new Intent(LoginActivity.this, isTruck.class));
         } else {
             // Signed out, show unauthenticated UI.
-            Toast.makeText(getApplicationContext() ,"Login Failed!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Login Failed!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -586,37 +599,36 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
-    private class checkIfAccountExists extends AsyncTask<GoogleSignInAccount, Integer, Void>{
+    private class checkIfAccountExists extends AsyncTask<GoogleSignInAccount, Integer, FoodTruck> {
         @Override
-        protected Void doInBackground(GoogleSignInAccount... params){
-
-            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
-            ManagerClass managerClass = new ManagerClass();
-            CognitoCachingCredentialsProvider credentialsProvider =
-                    managerClass.getCredentials(LoginActivity.this); //Pass in the activity name
-            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
-            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+        protected FoodTruck doInBackground(GoogleSignInAccount... params) {
 
             //Selects a truck based on primary key (id) to update
-            FoodTruck truckToUpdate = mapper.load(FoodTruck.class, params[0].getId()); // params[0] is the acct object
+            FoodTruck truckToCheck = mapper.load(FoodTruck.class, params[0].getId()); // params[0] is the acct object
 
-            exists = truckToUpdate != null ? true : false;
+            exists = truckToCheck != null ? true : false;
             Log.wtf("Testing", "Does acct exists in DB: " + exists);
 
-            if(exists){
-                //Set activity to whatever is returned
+            return truckToCheck;
+        }
+
+        protected void onPostExecute(FoodTruck truckToCheck) {
+            if (exists) {
+                //Because account is already in our db, set activity to truck view or customer view depending on isTruck value
                 Log.wtf("Testing", "Truck exists");
-            }
-            else{
-                Log.wtf("Testing", "Added a new truck");
-                FoodTruck newTruck = new FoodTruck();
-                newTruck.setID(acct.getId());
-                newTruck.setIsTruck(true);//Depends on what the activity sends back
+                Integer owner = truckToCheck.getIsTruck(); //Contains isTruck. 1 if owner, 0 if customer
+                if(owner == 1){
+                    startActivity(new Intent(LoginActivity.this, TruckUI.class));
+                }
+                else {
+                    startActivity(new Intent(LoginActivity.this, FoodTruckLocator.class));
+                }
+            } else {
 
-                //mapper.save(newTruck);
+                //Because account does not exist on our DB, run this intent to see if user is truck or customer
+                //This intent will handle the adding the user to DB
+                startActivity(new Intent(LoginActivity.this, isTruck.class));
             }
-
-            return null;
         }
 
     }
