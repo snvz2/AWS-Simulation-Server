@@ -305,12 +305,12 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
             /* Iterate through all newly discovered trucks */
             for (FoodTruck truck: result) {
                 if(truck.getIsTruck() == 0){ continue; } // Don't display to list view if account isnt a truck owner
-                Log.wtf("See truck rating", "Rating: " + truck.getRating());
+                Log.wtf("See truck rating", "Rating: " + truck.getDbRating());
                 Log.wtf("See truck rating", "Menu: " + truck.getMenu());
                 Log.wtf("Print description", "Description: " + truck.getDescription());
 
                 //Test print the hash maps
-                for(Map.Entry<String, Integer> entry : truck.getRating().entrySet()){
+                for(Map.Entry<String, Integer> entry : truck.getDbRating().entrySet()){
                     Log.wtf("Testing hashmap", entry.getKey() + " - " + entry.getValue());
                 }
 
