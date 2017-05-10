@@ -1,11 +1,11 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/truckLocatorLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorAccent"
     android:orientation="vertical"
-    android:padding="4dp" >
+    android:padding="4dp">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
@@ -15,8 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5"
-        tools:context="edu.sjsu.teamneon.hangrymobile.FoodTruckLocator"
-        />
+        tools:context="edu.sjsu.teamneon.hangrymobile.FoodTruckLocator" />
 
     <Button
         android:id="@+id/gps"
