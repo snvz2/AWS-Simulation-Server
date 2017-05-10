@@ -41,7 +41,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCallback, LocationListener {
     Button btnLoc;
@@ -304,8 +306,13 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
             /* Iterate through all newly discovered trucks */
             for (FoodTruck truck: result) {
                 if(truck.getIsTruck() == 0){ continue; } // Don't display to list view if account isnt a truck owner
-                Log.wtf("See truck rating", "Rating: " + truck.getRating() );
-                Log.wtf("See truck rating", "Menu: " + truck.getMenu() );
+                Log.wtf("See truck rating", "Rating: " + truck.getRating());
+                Log.wtf("See truck rating", "Menu: " + truck.getMenu());
+
+                //Test print the hash maps
+                for(Map.Entry<String, Integer> entry : truck.getRating().entrySet()){
+                    Log.wtf("Testing hashmap", entry.getKey() + " - " + entry.getValue());
+                }
 
                 LatLng latLng = new LatLng(
                         Double.parseDouble(truck.getLat()),
