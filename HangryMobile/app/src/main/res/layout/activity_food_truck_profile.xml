@@ -15,6 +15,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         app:srcCompat="@drawable/tacotruck" />
 
     <TextView
@@ -25,6 +27,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/imageView"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_toLeftOf="@+id/ratingBar"
         android:layout_toStartOf="@+id/ratingBar"
         android:fontFamily="casual"
@@ -41,6 +45,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/imageView"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:paddingTop="5dp"
         android:stepSize="1" />
 
     <TextView
@@ -73,6 +80,9 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/truckName"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:fontFamily="casual"
         android:text="Profile information goes here"
         android:textColor="@color/common_google_signin_btn_text_dark_default"
