@@ -19,6 +19,7 @@ public class EditTruckProfile extends AppCompatActivity {
 
                 //TODO: Add to Dynamo Description Field
 
+
             }
         });
         Button btnWebview = (Button)findViewById(R.id.webview);

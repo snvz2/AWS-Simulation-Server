@@ -33,6 +33,8 @@ public class FoodTruckProfile extends AppCompatActivity {
         }
         TextView foodTruckName = (TextView) findViewById(R.id.truckName);
         foodTruckName.setText(foodTruck.getName());
+        TextView foodTruckDescription = (TextView) findViewById(R.id.description);
+        foodTruckDescription.setText(foodTruck.getDescription());
 
         RatingBar ratingBar;
         TextView txtRatingValue;
