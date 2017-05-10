@@ -3,6 +3,8 @@ package edu.sjsu.teamneon.hangrymobile;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
+import android.widget.RatingBar;
+import android.widget.RatingBar.OnRatingBarChangeListener;
 
 public class FoodTruckProfile extends AppCompatActivity {
 
@@ -10,6 +12,8 @@ public class FoodTruckProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_truck_profile);
+        //RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+
 
         /* Get the food truck instance we passed as a bundle */
         FoodTruck foodTruck = null;
