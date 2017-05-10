@@ -20,7 +20,6 @@ public class TruckUI extends AppCompatActivity {
         setContentView(R.layout.activity_truck_ui);
         Button btnEnable = (Button)findViewById(R.id.enableLoc);
         Button btnDisable = (Button)findViewById(R.id.disableLoc);
-        Button btnWebview = (Button)findViewById(R.id.webview);
 
         Button btnProfile = (Button)findViewById(R.id.editTruckProfile);
 
@@ -45,13 +44,6 @@ public class TruckUI extends AppCompatActivity {
             }
         });
 
-        btnWebview.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
-                startActivity(new Intent(TruckUI.this, TruckUIWeb.class));
-
-            }
-        });
 
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override

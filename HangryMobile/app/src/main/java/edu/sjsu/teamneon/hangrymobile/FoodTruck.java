@@ -26,18 +26,13 @@ public class FoodTruck implements Parcelable {
     private Map<String, Map<String, String>> menu;
     private Map<String, Integer> rating;
 
-//    public FoodTruck(String name, String lon, String lat) {
-//        super();
-//        this.name = name;
-//        this.lon = lon;
-//        this.lat = lat;
-//    }
 
     public FoodTruck() {
         super();
     }
 
     private FoodTruck(Parcel in){
+        this.description = in.readString();
         this.id = in.readString();
         this.name = in.readString();
         this.lon = in.readString();
@@ -141,6 +136,7 @@ public class FoodTruck implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(description);
         dest.writeString(id);
         dest.writeString(name);
         dest.writeString(lon);

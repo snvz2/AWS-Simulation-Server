@@ -307,6 +307,7 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                 if(truck.getIsTruck() == 0){ continue; } // Don't display to list view if account isnt a truck owner
                 Log.wtf("See truck rating", "Rating: " + truck.getRating());
                 Log.wtf("See truck rating", "Menu: " + truck.getMenu());
+                Log.wtf("Print description", "Description: " + truck.getDescription());
 
                 //Test print the hash maps
                 for(Map.Entry<String, Integer> entry : truck.getRating().entrySet()){
@@ -324,8 +325,11 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                 //Scan each truck to list view adapter
 
 
-                populateListView();
+                //Add each truck to list view adapter
                 infoArray.add(truck);
+                populateListView();
+
+
                 /* Create a truck view and add it to LinearLayout */
 //                TextView truckView = new TextView(FoodTruckLocator.this);
 //                truckView.setTextSize(30);
