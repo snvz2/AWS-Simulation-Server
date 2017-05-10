@@ -8,8 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
-
+import android.support.v7.app.AppCompatActivity;
 public class TruckUI extends AppCompatActivity {
 
     @Override
@@ -18,18 +19,24 @@ public class TruckUI extends AppCompatActivity {
         setContentView(R.layout.activity_truck_ui);
         Button btnEnable = (Button)findViewById(R.id.enableLoc);
         Button btnDisable = (Button)findViewById(R.id.disableLoc);
-
+        final Button indicator = (Button)findViewById(R.id.indicator);
+        final TextView textIndicator = (TextView)findViewById(R.id.textIndicator);
         btnEnable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TruckUI.this, "Broadacasting Location!", Toast.LENGTH_SHORT).show();
+
+                indicator.setActivated(true);
+                textIndicator.setVisibility(View.VISIBLE);
 
             }
         });
         btnDisable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TruckUI.this, "Broadacasting Disabled!", Toast.LENGTH_SHORT).show();
+
+                indicator.setActivated(false);
+                textIndicator.setVisibility(View.INVISIBLE);
+
             }
         });
 
