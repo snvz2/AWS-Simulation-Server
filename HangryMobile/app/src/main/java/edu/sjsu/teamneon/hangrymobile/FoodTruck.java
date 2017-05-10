@@ -21,6 +21,7 @@ public class FoodTruck implements Parcelable {
     private String lon;
     private String lat;
     private Integer isTruck; //Truck owner or customer
+    private String description;
     private Map<String, Map<String, String>> menu;
     private Map<String, Integer> rating;
 
@@ -100,6 +101,15 @@ public class FoodTruck implements Parcelable {
 
     public void setIsTruck(Integer isTruck){
         this.isTruck = isTruck;
+    }
+
+    @DynamoDBAttribute(attributeName = "description")
+    public String getDescription(){
+        return description;
+    }
+
+    public void setDescription(String description){
+        this.description = description;
     }
 
     @DynamoDBAttribute(attributeName = "Menu")
