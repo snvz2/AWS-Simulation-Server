@@ -59,7 +59,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.sjsu.teamneon.hangrymobile.FoodTruckLocator" />
         </activity>
-        <activity android:name=".isTruck"></activity>
+        <activity android:name=".isTruck" />
+        <activity android:name=".EditTruckProfile"></activity>
     </application>
 
 </manifest>

@@ -126,7 +126,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="49dp"
+        android:layout_marginTop="23dp"
         android:fontFamily="casual"
         android:text="Now Broadcasting!"
         android:textColor="@color/common_google_signin_btn_text_dark_default"
@@ -135,4 +135,19 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/disableLoc" />
+
+    <Button
+        android:id="@+id/editTruckProfile"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="39dp"
+        android:background="@drawable/google_button_bg"
+        android:fontFamily="casual"
+        android:text="Edit Profile"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/indicator" />
+
 </android.support.constraint.ConstraintLayout>
