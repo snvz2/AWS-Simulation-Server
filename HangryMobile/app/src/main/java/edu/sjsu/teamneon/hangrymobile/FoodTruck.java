@@ -2,6 +2,7 @@ package edu.sjsu.teamneon.hangrymobile;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
 
@@ -20,6 +21,7 @@ public class FoodTruck implements Parcelable {
     private String name; //Truck name
     private String lon;
     private String lat;
+    private String description;
     private Integer isTruck; //Truck owner or customer
     private Map<String, Map<String, String>> menu;
     private Map<String, Integer> rating;
@@ -40,6 +42,8 @@ public class FoodTruck implements Parcelable {
         this.name = in.readString();
         this.lon = in.readString();
         this.lat = in.readString();
+        this.description = in.readString();
+        Log.wtf("See truck description", " " + this.description);
     }
 
     public static final Parcelable.Creator<FoodTruck> CREATOR =
@@ -101,7 +105,14 @@ public class FoodTruck implements Parcelable {
     public void setIsTruck(Integer isTruck){
         this.isTruck = isTruck;
     }
+    @DynamoDBAttribute(attributeName = "description")
+    public String getDescription(){
+        return description;
+    }
 
+    public void setDescription(String description){
+        this.description = description;
+    }
     @DynamoDBAttribute(attributeName = "Menu")
     public Map<String, Map<String, String>> getMenu(){
         return menu;
@@ -133,5 +144,8 @@ public class FoodTruck implements Parcelable {
         dest.writeString(name);
         dest.writeString(lon);
         dest.writeString(lat);
+        dest.writeString(description);
+
+
     }
 }
