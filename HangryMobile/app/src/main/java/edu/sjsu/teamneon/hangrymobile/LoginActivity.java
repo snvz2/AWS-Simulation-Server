@@ -605,7 +605,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             //Selects a truck based on primary key (id) to update
             FoodTruck truckToCheck = mapper.load(FoodTruck.class, params[0].getId()); // params[0] is the acct object
-
             exists = truckToCheck != null ? true : false;
             Log.wtf("Testing", "Does acct exists in DB: " + exists);
 
