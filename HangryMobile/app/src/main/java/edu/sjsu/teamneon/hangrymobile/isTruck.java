@@ -33,11 +33,16 @@ public class isTruck extends AppCompatActivity {
         btnIsTruck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(isTruck.this, TruckUI.class));
-                new DynamoCRUD.updateTruckLon(isTruck.this).execute("5", "32.124");
+
+                String key = getResources().getString(R.string.google_sign_in_account_object_key);
+                Intent isTruckIntent = new Intent();
+                Bundle isTruckBundle = new Bundle();
+                isTruckBundle.putParcelable(key, acct);
+                isTruckIntent.putExtras(isTruckBundle);
+                isTruckIntent.setClass(isTruck.this, TruckUI.class);
+                startActivity(isTruckIntent);
+
                 //Takes in in order: id, name, long, lat
-
-
                 new DynamoCRUD.storeTruck(acct.getId(),acct.getDisplayName(), "0","0", isTruck.this).execute();
                 //new DynamoCRUD.retrieveTruck(isTruck.this).execute(acct.getId());
 

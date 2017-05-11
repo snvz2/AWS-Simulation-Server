@@ -614,7 +614,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Log.wtf("Testing", "Truck exists");
                 Integer owner = truckToCheck.getIsTruck(); //Contains isTruck. 1 if owner, 0 if customer
                 if(owner == 1){
-                    startActivity(new Intent(LoginActivity.this, TruckUI.class));
+
+                    String key = getResources().getString(R.string.google_sign_in_account_object_key);
+                    Intent isTruckIntent = new Intent();
+                    Bundle isTruckBundle = new Bundle();
+                    isTruckBundle.putParcelable(key, acct);
+                    isTruckIntent.putExtras(isTruckBundle);
+                    isTruckIntent.setClass(LoginActivity.this, TruckUI.class);
+                    startActivity(isTruckIntent);
+
+                    //startActivity(new Intent(LoginActivity.this, TruckUI.class));
                 }
                 else {
                     startActivity(new Intent(LoginActivity.this, FoodTruckLocator.class));

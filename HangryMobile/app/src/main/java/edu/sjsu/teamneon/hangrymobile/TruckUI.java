@@ -34,10 +34,6 @@ public class TruckUI extends AppCompatActivity {
             String key = getResources().getString(R.string.google_sign_in_account_object_key);
             acct = isTruckBundle.getParcelable(key);
         }
-        /* If we don't have an account, something went very, very wrong */
-        if (acct == null) {
-            return;
-        }
 
 
         gps = new GPSTracker(TruckUI.this);
@@ -55,14 +51,23 @@ public class TruckUI extends AppCompatActivity {
                 indicator.setActivated(true);
                 textIndicator.setVisibility(View.VISIBLE);
 
-                timer.schedule(updateTruckCoords, 0, 10000); //Run every 10 seconds
+//                timer.cancel();
+//                timer.purge();
+//                updateTruckCoords.cancel();
+//                timer.schedule(updateTruckCoords, 0, 1000); //Run every 10 seconds
 
+                timer = new Timer();
+                MyTask task=new MyTask();
+                timer.schedule(task,0, 1000);
 
             }
         });
         btnDisable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                timer.cancel();
+                timer.purge();
 
                 indicator.setActivated(false);
                 textIndicator.setVisibility(View.INVISIBLE);
@@ -83,19 +88,30 @@ public class TruckUI extends AppCompatActivity {
 
     final Handler handler = new android.os.Handler();
     Timer timer = new Timer();
-    TimerTask updateTruckCoords = new TimerTask() {
-        @Override
+//    TimerTask updateTruckCoords = new TimerTask() {
+//        @Override
+//        public void run() {
+//            handler.post(new Runnable() {
+//                public void run() {
+//                    try {
+//                        gps.getLocation();
+//                        new DynamoCRUD.updateTruckLatLon(TruckUI.this).execute(acct.getId(), Double.toString(gps.getLatitude()), Double.toString(gps.getLongitude()));
+//                    } catch (Exception e) {
+//                    }
+//                }
+//            });
+//        }
+//    };
+
+    private class MyTask extends TimerTask {
         public void run() {
-            handler.post(new Runnable() {
-                public void run() {
-                    try {
-                        gps.getLocation();
-                        new DynamoCRUD.updateTruckLatLon(TruckUI.this).execute("3", Double.toString(gps.getLatitude()), Double.toString(gps.getLongitude()));
-                    } catch (Exception e) {
-                    }
-                }
-            });
+            try {
+                gps.getLocation();
+                new DynamoCRUD.updateTruckLatLon(TruckUI.this).execute(acct.getId(), Double.toString(gps.getLatitude()), Double.toString(gps.getLongitude()));
+            } catch (Exception e) {
+            }
         }
-    };
+    }
+
 
 }
