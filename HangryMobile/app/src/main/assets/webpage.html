@@ -19,18 +19,17 @@
 <header>
 
 </header>
-   <h4><font color="red">TruckID Number: </font></h4><input id="keyValue" type="text" /><br />
-   <!-- p><button id="updateThis">Update</button></p-->
-   <p><button id="getThis">Get Info</button></p> 
-   <p><button id="clearThis">Clear Info</button></p>
+   <h4><font color="red">TruckID Number: </font></h4><input id="keyValue" type="text" />&nbsp;
+   <button id="getThis">Get Info</button> &nbsp;<button id="clearThis">Clear Info</button>
 <div id="menudata">
     <p  style="color:red" id="output"></p>
 	<p  style="color:red" id="output1"></p>
 	<p  style="color:red" id="output2"></p>
 	<p  style="color:red" id="output3"></p>
 	<p  style="color:red" id="output4"></p>
+	<p  style="color:red" id="output5"></p>
 </div>
-
+ 
 <script type="text/javascript">
    //var creds = new AWS.Credentials({ accessKeyId: 'AKIAJSXUSFFBXHMXK7LA', //secretAccessKey: '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', sessionToken: //null });
    <!-- Global vars-->
@@ -51,9 +50,11 @@
 			var lll = document.getElementById("output2");
 			lll.innerHTML = "";
 			var llll = document.getElementById("output3");
-			lll.innerHTML = "";
-			var llll = document.getElementById("output4");
 			llll.innerHTML = "";
+			var dr4 = document.getElementById("output4");
+			dr4.innerHTML = "";
+			var lllll = document.getElementById("output5");
+			lllll.innerHTML = "";
 		}
 	<!-- Get Data from UI -->
 	document.getElementById('getThis').onclick = function () {
@@ -84,23 +85,30 @@
 			ll.innerHTML = "Truck ID: " + data.Item.id;
 			var lll = document.getElementById("output2");
 			lll.innerHTML = "Truck Description: " + data.Item.description;
-			var llll = document.getElementById("output3");
-			lll.innerHTML = "Truck Menu: " + JSON.stringify(data.Item.Menu);
-			var llll = document.getElementById("output4");
-			llll.innerHTML = "Truck Rating: " + JSON.stringify(data.Item.avgRating);
+			var drink = document.getElementById("output3");
+			drink.innerHTML = "Truck Drinks: " + JSON.stringify(data.Item.Menu.Drink);
+			var food = document.getElementById("output4");
+			food.innerHTML = "Truck Food: " + JSON.stringify(data.Item.Menu.Food);
+			var r = document.getElementById("output5");
+			r.innerHTML = "Truck Rating: " + JSON.stringify(data.Item.avgRating);
    })
 }
 </script>
 
-<div id="text">
 
-</div>
 <aside>
     <figure>
         <img src="truck.png" height="100px" width="100px" />
-        <figcaption>TRUCK 1</figcaption>
     </figure>
 </aside>
+<div id="text">
+    <h4><font color="red">Menu Items: </font></h4><input id="m1Value" type="text" />&nbsp;
+   <button id="putM1">Update Menu</button> &nbsp;<button id="clearMenu1">Clear Info</button>
+    <input id="m2Value" type="text" />&nbsp;
+   <button id="putM2">Update Menu</button> &nbsp;<button id="clearMenu2">Clear Info</button>
+   <input id="d1Value" type="text" />&nbsp;
+   <button id="putD1">Update Menu</button> &nbsp;<button id="clearD1">Clear Info</button>
+</div>
 <article>
     <h1></h1>
     <iframe width="426" height="240" src="https://www.youtube.com/embed/n38wfAp_mHw" frameborder="0" allowfullscreen></iframe>
