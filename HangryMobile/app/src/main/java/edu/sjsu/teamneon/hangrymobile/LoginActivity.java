@@ -30,7 +30,6 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -44,8 +43,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -626,7 +623,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 //Because account does not exist on our DB, run this intent to see if user is truck or customer
                 //This intent will handle the adding the user to DB
-                startActivity(new Intent(LoginActivity.this, isTruck.class));
+                String key = getResources().getString(R.string.google_sign_in_account_object_key);
+                Intent isTruckIntent = new Intent();
+                Bundle isTruckBundle = new Bundle();
+                isTruckBundle.putParcelable(key, acct);
+                isTruckIntent.putExtras(isTruckBundle);
+                isTruckIntent.setClass(LoginActivity.this, isTruck.class);
+                startActivity(isTruckIntent);
             }
         }
 

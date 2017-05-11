@@ -21,14 +21,14 @@
 </header>
    <h4><font color="red">TruckID Number: </font></h4><input id="keyValue" type="text" /><br />
    <!-- p><button id="updateThis">Update</button></p-->
-   <p><button id="getThis">Get Info</button></p> 
-   <p><button id="clearThis">Clear Info</button></p>
+   <p><button id="getThis">Get!</button></p> 
 <div id="menudata">
     <p  style="color:red" id="output"></p>
 	<p  style="color:red" id="output1"></p>
 	<p  style="color:red" id="output2"></p>
 	<p  style="color:red" id="output3"></p>
 	<p  style="color:red" id="output4"></p>
+	
 </div>
 
 <script type="text/javascript">
@@ -41,21 +41,7 @@
         var dynamodb = null;
         var docClient = null;
 		var resultData = null;
-		<!-- Clear -->
-		document.getElementById('clearThis').onclick = function (){
-		    <!-- HTML -->
-			var l = document.getElementById("output");
-			l.innerHTML = "";
-			var ll = document.getElementById("output1");
-			ll.innerHTML = "";
-			var lll = document.getElementById("output2");
-			lll.innerHTML = "";
-			var llll = document.getElementById("output3");
-			lll.innerHTML = "";
-			var llll = document.getElementById("output4");
-			llll.innerHTML = "";
-		}
-	<!-- Get Data from UI -->
+		<!-- Get Data from UI -->
 	document.getElementById('getThis').onclick = function () {
 		   dynamodb = new AWS.DynamoDB({ region: 'us-east-1', credentials: {accessKeyId: 'AKIAJSXUSFFBXHMXK7LA', secretAccessKey: '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'} }); 
      <!-- Row identifier (keyText): primary key in a dynamodb  table -->

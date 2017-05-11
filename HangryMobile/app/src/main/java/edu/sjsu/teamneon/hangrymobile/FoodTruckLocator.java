@@ -41,7 +41,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -341,9 +340,13 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
                         new MarkerOptions().position(latLng).title(
                                 truck.getName())));
 
+                //Scan each truck to list view adapter
+
+
                 //Add each truck to list view adapter
                 infoArray.add(truck);
                 populateListView();
+
 
                 /* Create a truck view and add it to LinearLayout */
 //                TextView truckView = new TextView(FoodTruckLocator.this);

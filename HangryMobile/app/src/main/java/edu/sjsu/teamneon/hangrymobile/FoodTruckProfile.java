@@ -13,10 +13,10 @@ import android.widget.TextView;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-
 import java.util.Map;
 
 import static edu.sjsu.teamneon.hangrymobile.R.id.ratingBar;
+
 
 public class FoodTruckProfile extends AppCompatActivity {
     FoodTruck foodTruck;
@@ -29,8 +29,6 @@ public class FoodTruckProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_truck_profile);
         //RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
-
-
         /* Get the food truck instance we passed as a bundle */
         final Bundle foodTruckBundle = this.getIntent().getExtras();
         if (foodTruckBundle != null) {
@@ -44,16 +42,17 @@ public class FoodTruckProfile extends AppCompatActivity {
         TextView foodTruckName = (TextView) findViewById(R.id.truckName);
         foodTruckName.setText(foodTruck.getName());
 
+        TextView foodTruckDescription = (TextView) findViewById(R.id.description);
+        foodTruckDescription.setText(foodTruck.getDescription());
+
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         txtRatingValue = (TextView) findViewById(R.id.averageRating);
         txtRatingValue.setText(String.valueOf(foodTruck.getAvgRating()));
-
         //if rating value is changed,
         //display the current rating value in the result (textview) automatically
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating,
-                                        boolean fromUser) {
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
 
                 txtRatingValue.setText(String.valueOf(foodTruck.getAvgRating()));
                 userRating = String.valueOf(Math.round(rating));
@@ -93,7 +92,7 @@ public class FoodTruckProfile extends AppCompatActivity {
             ratingBar.setIsIndicator(true);
         }
 
-
     }
 
 }
+
