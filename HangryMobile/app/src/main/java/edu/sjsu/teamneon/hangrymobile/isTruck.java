@@ -39,6 +39,7 @@ public class isTruck extends AppCompatActivity {
 
 
                 new DynamoCRUD.storeTruck(acct.getId(),acct.getDisplayName(), "0","0", isTruck.this).execute();
+                //new DynamoCRUD.retrieveTruck(isTruck.this).execute(acct.getId());
 
             }
         });
