@@ -78,7 +78,7 @@ public class FoodTruckDynamoTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         // Get the truck back that we created
-        new DynamoCRUD.retreiveTruck(appContext).executeOnExecutor(new CurrentThreadExecutor(), foodTruck.getID());
+        new DynamoCRUD.retrieveTruck(appContext).executeOnExecutor(new CurrentThreadExecutor(), foodTruck.getID());
         Thread.sleep(5000);
 
         // compare the fields
