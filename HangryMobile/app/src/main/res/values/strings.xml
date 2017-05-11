@@ -8,6 +8,7 @@
     <!-- Constants -->
     <string name="default_zoom">15.0</string>
     <string name="food_truck_object_key">foodTruckObject</string>
+    <string name="google_sign_in_account_object_key">foodTruckObject</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
