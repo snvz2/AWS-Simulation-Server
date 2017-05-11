@@ -2,69 +2,82 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Truck 1</title>
     <meta name="HandheldFriendly" content="True" />
     <meta name="MobileOptimized" content="320" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- AWS for JavaScript: global variable AWS (or window.AWS). -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.49.0/aws-sdk.min.js"></script>
+    <!--script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script-->
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <!--script src="../../../../lib/jquery-1.12.4.js"></script -->
     <!-- TO DO: script src="/aws/aws-sdk-2.6.10.min"  -->
     <!--link href="StyleSheet.css" rel="stylesheet" /-->
 
-    <!-- GLOBAL VARS -->
-    <script>
-	    var _creds = new AWS.Credentials({ accessKeyId: 'AKIAJSXUSFFBXHMXK7LA', secretAccessKey: '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', sessionToken: null });
-	    <!-- Create DynamoDB object with Set credentials and region-->
-		var _dynamodb = new AWS.DynamoDB({ region: 'us-east-1', credentials: {accessKeyId: 'AKIAJSXUSFFBXHMXK7LA', secretAccessKey: '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'} });
-		var _docClient = new AWS.DynamoDB.DocumentClient({ service: _dynamodb });
-		<!-- HTML -->
-		var text = "";
-		<!-- TABLES to Scan Truck  -->
-		var TableTruck = "Trucks";
-		<!-- QUERY TABLE the Table: -->
-		$(function() {
-		    var text = "TEXT..........";
-			var nm = "Name: ";
-	    	var params = {
-		    TableName: "Trucks",
-		    Select: 'ALL_ATTRIBUTES',
-			ReturnConsumedCapacity: 'NONE'
-		    };
-			_dynamodb.scan(params, function(err, data) {
-			   if (err) {
-			   console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-			   } else {
-			     console.log("Query succeeded.");
-				 console.log("Stringified Data: " + JSON.stringify(data));
-				 console.log("Data Length: " + data.Items.length);
-				 data.Items.forEach(function(item) {
-                       console.log(" item.id -" + item.id + "   item.name: " + item.name);
-                 });
-				 var i = 0;
-				 for (; i < data.Items.length; i++) {
-				    nm = data.Items[i].id;
-					console.log("data.Items[i].id " + data.Items[i].id);
-					text += nm;
-					nm += data.Items[i].id;
-				 }
-			   }
-			});
-			// HTML data table insert
-			var iv = document.getElementById("menudata").innerHTML = text;
-			//iv.innerHTML = data; //text;
-			document.getElementById("text").innerHTML = nm;
-	   });
-	</script>
+ <title>AWS CRUD Test</title>
 </head>
 <body>
 <header>
 
 </header>
+   <h4><font color="red">TruckID Number: </font></h4><input id="keyValue" type="text" /><br />
+   <!-- p><button id="updateThis">Update</button></p-->
+   <p><button id="getThis">Get!</button></p> 
 <div id="menudata">
-
+    <p  style="color:red" id="output"></p>
+	<p  style="color:red" id="output1"></p>
+	<p  style="color:red" id="output2"></p>
+	<p  style="color:red" id="output3"></p>
+	<p  style="color:red" id="output4"></p>
+	
 </div>
+
+<script type="text/javascript">
+   //var creds = new AWS.Credentials({ accessKeyId: 'AKIAJSXUSFFBXHMXK7LA', //secretAccessKey: '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', sessionToken: //null });
+   <!-- Global vars-->
+        var params;
+        var keyText;
+        var attText;
+        var valText;
+        var dynamodb = null;
+        var docClient = null;
+		var resultData = null;
+		<!-- Get Data from UI -->
+	document.getElementById('getThis').onclick = function () {
+		   dynamodb = new AWS.DynamoDB({ region: 'us-east-1', credentials: {accessKeyId: 'AKIAJSXUSFFBXHMXK7LA', secretAccessKey: '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'} }); 
+     <!-- Row identifier (keyText): primary key in a dynamodb  table -->
+    docClient = new AWS.DynamoDB.DocumentClient({ service: dynamodb });
+	console.log("Key Value (row in dynamodb table - primary key): ", keyText);
+	keyText = document.getElementById("keyValue").value;
+	<!-- Column in dynamodb table (attText) -->
+	attText = "Menu";
+		params = {
+        TableName: 'Trucks',
+        Key: {
+            id: keyText
+        },
+    };
+	<!-- Get Data from DynamoDB: -->
+	docClient.get(params, function(err, data) {
+		if (err)
+			console.log(JSON.stringify(err, null, 2));
+		else
+			console.log(JSON.stringify(data, null, 2));
+			<!-- HTML -->
+			
+			var l = document.getElementById("output");
+			l.innerHTML = "Truck Name: " + data.Item.name;
+			var ll = document.getElementById("output1");
+			ll.innerHTML = "Truck ID: " + data.Item.id;
+			var lll = document.getElementById("output2");
+			lll.innerHTML = "Truck Description: " + data.Item.description;
+			var llll = document.getElementById("output3");
+			lll.innerHTML = "Truck Menu: " + JSON.stringify(data.Item.Menu);
+			var llll = document.getElementById("output4");
+			llll.innerHTML = "Truck Rating: " + JSON.stringify(data.Item.avgRating);
+   })
+}
+</script>
+
 <div id="text">
 
 </div>
