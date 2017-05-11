@@ -191,4 +191,29 @@ public class DynamoCRUD {
             return null;
         }
     }
+
+    //Grab truck by id
+    public static class retreiveTruck extends AsyncTask<String, Integer, FoodTruck>{
+
+        private Context context;
+
+        public retreiveTruck(Context context) {
+            this.context = context;
+        }
+        @Override
+        protected FoodTruck doInBackground(String... params){
+
+            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+            ManagerClass managerClass = new ManagerClass();
+            CognitoCachingCredentialsProvider credentialsProvider =
+                    managerClass.getCredentials(context); //Pass in the activity name
+            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+
+            //Selects a truck based on primary key (id) to update
+            FoodTruck truckToUpdate = mapper.load(FoodTruck.class, params[0]);//Params[0] holds the truck id
+
+            return truckToUpdate;
+        }
+    }
 }

@@ -31,6 +31,7 @@ public class isTruck extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(isTruck.this, TruckUI.class));
+                //new DynamoCRUD(isTruck.this).storeTruck()
 
             }
         });
