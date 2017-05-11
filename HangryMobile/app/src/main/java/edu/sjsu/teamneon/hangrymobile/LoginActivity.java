@@ -152,12 +152,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });*/
 
+
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.sign_in_button:
                         signIn();
+
                         break;
                 }
             }
@@ -202,6 +204,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }*/
+
+
     }
 
     /* Background Video Code */
@@ -614,7 +618,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Log.wtf("Testing", "Truck exists");
                 Integer owner = truckToCheck.getIsTruck(); //Contains isTruck. 1 if owner, 0 if customer
                 if(owner == 1){
-                    startActivity(new Intent(LoginActivity.this, TruckUI.class));
+                    Intent intent =
+                            new Intent(getApplicationContext(), TruckUI.class);
+                    intent.putExtra("food_truck_object_info_key", acct.getId());
+                    startActivity(intent);
+                    //startActivity(new Intent(LoginActivity.this, TruckUI.class));
                 }
                 else {
                     startActivity(new Intent(LoginActivity.this, FoodTruckLocator.class));
