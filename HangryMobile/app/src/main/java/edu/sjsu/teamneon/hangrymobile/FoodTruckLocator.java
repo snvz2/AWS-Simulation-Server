@@ -59,6 +59,12 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
     //For list view
     private ArrayList<FoodTruck> infoArray = new ArrayList<FoodTruck>();
 
+    //For AWS Credentials
+    ManagerClass managerClass;
+    CognitoCachingCredentialsProvider credentialsProvider;
+    AmazonDynamoDBClient ddbClient;
+    DynamoDBMapper mapper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /* Set resource values */
@@ -71,6 +77,15 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.truckMap);
         mapFragment.getMapAsync(this);
+
+        //Created AWS Credentials
+        managerClass = new ManagerClass();
+        credentialsProvider =
+                managerClass.getCredentials(FoodTruckLocator.this); //Pass in the activity name
+        ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+        mapper = new DynamoDBMapper(ddbClient);
+
+
         /* Get the truck list frame layout handle */
         //frameTruckList = (RelativeLayout) findViewById(R.id.truckList);
         btnLoc = (Button) findViewById(R.id.gps);
@@ -79,6 +94,10 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onClick(View v) {
                 updatePos();
+
+                new DynamoCRUD.updateTruckName(FoodTruckLocator.this).execute("5", "Hello");
+                new DynamoCRUD.updateTruckLon(FoodTruckLocator.this).execute("5", "32.124");
+
             }
         });
 
@@ -238,26 +257,26 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
         }
     }
 
-    private class updateTruck extends AsyncTask<Void, Integer, Integer>{
-        @Override
-        protected Integer doInBackground(Void... params){
-
-            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
-            ManagerClass managerClass = new ManagerClass();
-            CognitoCachingCredentialsProvider credentialsProvider =
-                    managerClass.getCredentials(FoodTruckLocator.this); //Pass in the activity name
-            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
-            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
-
-            //Selects a truck based on primary key (id) to update
-            FoodTruck truckToUpdate = mapper.load(FoodTruck.class, "2");
-            truckToUpdate.setName("New truck");
-
-            mapper.save(truckToUpdate);
-
-            return null;
-        }
-    }
+//    private class updateTruck extends AsyncTask<Void, Integer, Integer>{
+//        @Override
+//        protected Integer doInBackground(Void... params){
+//
+//            //Instantiate manager class (Currently only has Dynamo) and get credentials for mapper
+//            ManagerClass managerClass = new ManagerClass();
+//            CognitoCachingCredentialsProvider credentialsProvider =
+//                    managerClass.getCredentials(FoodTruckLocator.this); //Pass in the activity name
+//            AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+//            DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+//
+//            //Selects a truck based on primary key (id) to update
+//            FoodTruck truckToUpdate = mapper.load(FoodTruck.class, "2");
+//            truckToUpdate.setName("New truck");
+//
+//            mapper.save(truckToUpdate);
+//
+//            return null;
+//        }
+//    }
 
 //    private class deleteTruck extends AsyncTask<Void, Integer, Integer> {
 //        @Override
@@ -305,12 +324,12 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
             /* Iterate through all newly discovered trucks */
             for (FoodTruck truck: result) {
                 if(truck.getIsTruck() == 0){ continue; } // Don't display to list view if account isnt a truck owner
-                Log.wtf("See truck rating", "Rating: " + truck.getRating());
+                Log.wtf("See truck rating", "Rating: " + truck.getDbRating());
                 Log.wtf("See truck rating", "Menu: " + truck.getMenu());
                 Log.wtf("Print description", "Description: " + truck.getDescription());
 
                 //Test print the hash maps
-                for(Map.Entry<String, Integer> entry : truck.getRating().entrySet()){
+                for(Map.Entry<String, Integer> entry : truck.getDbRating().entrySet()){
                     Log.wtf("Testing hashmap", entry.getKey() + " - " + entry.getValue());
                 }
 

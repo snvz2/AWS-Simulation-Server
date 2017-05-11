@@ -22,6 +22,7 @@ public class FoodTruck implements Parcelable {
     private String lat;
     private Integer isTruck; //Truck owner or customer
     private String description;
+    private String avgRating;
     private Map<String, Map<String, String>> menu;
     private Map<String, Integer> rating;
 
@@ -36,6 +37,7 @@ public class FoodTruck implements Parcelable {
         this.name = in.readString();
         this.lon = in.readString();
         this.lat = in.readString();
+        this.avgRating = in.readString();
     }
 
     public static final Parcelable.Creator<FoodTruck> CREATOR =
@@ -117,12 +119,21 @@ public class FoodTruck implements Parcelable {
     }
 
     @DynamoDBAttribute(attributeName = "rating")
-    public Map<String, Integer> getRating(){
+    public Map<String, Integer> getDbRating(){
         return rating;
     }
 
-    public void setRating(Map<String, Integer> rating){
+    public void setDbRating(Map<String, Integer> rating){
         this.rating = rating;
+    }
+
+    @DynamoDBAttribute(attributeName = "avgRating")
+    public String getAvgRating(){
+        return avgRating;
+    }
+
+    public void setAvgRating(String avgRating){
+        this.avgRating = avgRating;
     }
 
 
@@ -139,5 +150,6 @@ public class FoodTruck implements Parcelable {
         dest.writeString(name);
         dest.writeString(lon);
         dest.writeString(lat);
+        dest.writeString(avgRating);
     }
 }
