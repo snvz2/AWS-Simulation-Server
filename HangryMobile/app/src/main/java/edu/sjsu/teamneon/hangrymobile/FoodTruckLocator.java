@@ -94,8 +94,8 @@ public class FoodTruckLocator extends FragmentActivity implements OnMapReadyCall
             public void onClick(View v) {
                 updatePos();
 
-                new DynamoCRUD.updateTruckName(FoodTruckLocator.this).execute("5", "Hello");
-                new DynamoCRUD.updateTruckLon(FoodTruckLocator.this).execute("5", "32.124");
+//                new DynamoCRUD.updateTruckName(FoodTruckLocator.this).execute("5", "Hello");
+//                new DynamoCRUD.updateTruckLon(FoodTruckLocator.this).execute("5", "32.124");
 
             }
         });
