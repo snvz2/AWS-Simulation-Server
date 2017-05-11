@@ -125,7 +125,7 @@ public class DynamoCRUD {
         }
     }
     //Delete truck
-    public class deleteTruck extends AsyncTask<String, Integer, String> {
+    public static class deleteTruck extends AsyncTask<String, Integer, String> {
 
         private Context context;
 
@@ -151,7 +151,7 @@ public class DynamoCRUD {
         }
     }
 
-    public class storeTruck extends AsyncTask<String, Integer, Integer>{
+    public static class storeTruck extends AsyncTask<String, Integer, Integer>{
         private String id;
         private String truckName;
         private String truckLon;
