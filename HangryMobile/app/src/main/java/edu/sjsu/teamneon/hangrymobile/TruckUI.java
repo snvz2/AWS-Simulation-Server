@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,7 +21,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class TruckUI extends AppCompatActivity {
-
+    String googleAcctNum;
+    
     GPSTracker gps;
     GoogleSignInAccount acct;
 
@@ -41,6 +43,12 @@ public class TruckUI extends AppCompatActivity {
         Button btnDisable = (Button)findViewById(R.id.disableLoc);
 
         Button btnProfile = (Button)findViewById(R.id.editTruckProfile);
+
+        Bundle extras = this.getIntent().getExtras();
+        googleAcctNum = extras.getString("food_truck_object_info_key");
+        Log.wtf("this is google acct", " " + googleAcctNum);
+
+
 
         final Button indicator = (Button)findViewById(R.id.indicator);
         final TextView textIndicator = (TextView)findViewById(R.id.textIndicator);
@@ -79,10 +87,16 @@ public class TruckUI extends AppCompatActivity {
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(TruckUI.this, EditTruckProfile.class));
+                Intent intent =
+                        new Intent(getApplicationContext(), EditTruckProfile.class);
+                intent.putExtra("food_truck_object_info_key", googleAcctNum);
+                startActivity(intent);
+                //startActivity(new Intent(TruckUI.this, EditTruckProfile.class));
 
             }
         });
+
+
 
     }
 
