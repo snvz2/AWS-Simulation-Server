@@ -7,6 +7,8 @@ import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 
+import java.util.Map;
+
 /**
  * Created by danieltam on 5/10/17.
  */
@@ -125,7 +127,7 @@ public class DynamoCRUD {
         }
     }
     //Delete truck
-    public class deleteTruck extends AsyncTask<String, Integer, String> {
+    public static class deleteTruck extends AsyncTask<String, Integer, String> {
 
         private Context context;
 
@@ -151,16 +153,13 @@ public class DynamoCRUD {
         }
     }
 
-    public class storeTruck extends AsyncTask<String, Integer, Integer>{
+    public static class storeTruck extends AsyncTask<String, Integer, Integer>{
         private String id;
         private String truckName;
         private String truckLon;
         private String truckLat;
         private Context context;
 
-        public storeTruck(Context context) {
-            this.context = context;
-        }
         public storeTruck(String id,String name, String lon, String lat, Context context)
         {
             this.id = id;
@@ -169,6 +168,7 @@ public class DynamoCRUD {
             this.truckLat = lat;
             this.context = context;
         }
+
 
         @Override
         protected Integer doInBackground(String... params){
@@ -182,10 +182,11 @@ public class DynamoCRUD {
 
             //Takes in in order: id, name, long, lat
             FoodTruck newTruck = new FoodTruck();
-            newTruck.setID(params[0]);
-            newTruck.setName(params[1]);
-            newTruck.setLon(params[2]);
-            newTruck.setLat(params[3]);
+            newTruck.setID(id);
+            newTruck.setName(truckName);
+            newTruck.setLon(truckLon);
+            newTruck.setLat(truckLat);
+            newTruck.setIsTruck(1);
             mapper.save(newTruck);
 
             return null;
@@ -193,11 +194,11 @@ public class DynamoCRUD {
     }
 
     //Grab truck by id
-    public static class retreiveTruck extends AsyncTask<String, Integer, FoodTruck>{
+    public static class retrieveTruck extends AsyncTask<String, Integer, FoodTruck>{
 
         private Context context;
 
-        public retreiveTruck(Context context) {
+        public retrieveTruck(Context context) {
             this.context = context;
         }
         @Override

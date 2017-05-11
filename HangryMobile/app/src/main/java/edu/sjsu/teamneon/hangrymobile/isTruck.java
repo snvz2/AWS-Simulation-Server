@@ -8,6 +8,8 @@ import android.widget.Button;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import java.util.Map;
+
 public class isTruck extends AppCompatActivity {
 
     private GoogleSignInAccount acct;
@@ -25,13 +27,18 @@ public class isTruck extends AppCompatActivity {
         if (acct == null) {
             return;
         }
+
         Button btnIsTruck = (Button)findViewById(R.id.truck10);
         Button btnIsUser = (Button)findViewById(R.id.user10);
         btnIsTruck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(isTruck.this, TruckUI.class));
-                //new DynamoCRUD(isTruck.this).storeTruck()
+                new DynamoCRUD.updateTruckLon(isTruck.this).execute("5", "32.124");
+                //Takes in in order: id, name, long, lat
+
+
+                new DynamoCRUD.storeTruck(acct.getId(),acct.getDisplayName(), "0","0", isTruck.this).execute();
 
             }
         });
