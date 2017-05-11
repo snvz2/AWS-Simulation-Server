@@ -31,8 +31,7 @@
 </div>
  
 <script type="text/javascript">
-   //var creds = new AWS.Credentials({ accessKeyId: 'AKIAJSXUSFFBXHMXK7LA', //secretAccessKey: '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', sessionToken: //null });
-   <!-- Global vars-->
+    <!-- Global vars-->
         var params;
         var keyText;
         var attText;
@@ -102,13 +101,76 @@
     </figure>
 </aside>
 <div id="text">
-    <h4><font color="red">Menu Items: </font></h4><input id="m1Value" type="text" />&nbsp;
-   <button id="putM1">Update Menu</button> &nbsp;<button id="clearMenu1">Clear Info</button>
+    <h4><font color="red">Menu Items: </font></h4>
+	<input id="m1Value" type="text" />
     <input id="m2Value" type="text" />&nbsp;
-   <button id="putM2">Update Menu</button> &nbsp;<button id="clearMenu2">Clear Info</button>
-   <input id="d1Value" type="text" />&nbsp;
-   <button id="putD1">Update Menu</button> &nbsp;<button id="clearD1">Clear Info</button>
+   <button id="putThis">Update Menu</button> &nbsp;<button id="clearMenu">Clear Info</button></br>
+
 </div>
+<script>
+document.getElementById('putThis').onclick = function () {
+    dynamodb = new AWS.DynamoDB({ region: 'us-east-1', credentials: {accessKeyId: 'AKIAJSXUSFFBXHMXK7LA', secretAccessKey: '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'} });
+    docClient = new AWS.DynamoDB.DocumentClient({ service: dynamodb });
+    var keyText = document.getElementById("keyValue").value;
+    var attText = document.getElementById("m1Value").value;
+    var valText = document.getElementById("m2Value").value;
+    console.log("Key Value: ", keyText);
+    console.log("m1Value: ", attText);
+    console.log("m2Value: ", valText);
+	//var foods = "{'" + attText +"':'3.00','"+ valText+"':'5.00'}";
+	
+	var foods1 = { 
+    "Drink": {
+      "Soda": "5.00",
+      "Water": "4.00"
+    },
+    "Food": {
+      "Chicken Wings": "2.00",
+      "Turkey": "2.00"
+    }
+  };
+  
+  	var foods = { 
+    "Drink": {
+      "Soda": "5.00",
+      "Water": "4.00"
+    },
+    "Food": {
+      "Chicken": "2.00",
+      "Turkey": "2.00"
+    }
+  };
+    //foods.Food.Chicken = attText;
+	//foods.Food.Turkey = valText;
+	
+	// delete old keys
+	foods.Food = {};
+	//add new keys to json
+	foods.Food[attText] = "3.00";
+	foods.Food[valText] = "3.00"
+	
+	console.log (foods);
+	var inColumn = "Menu"; //"Menu.Food"; 
+
+	params = {
+        TableName: 'Trucks',
+        Key: {
+            id: keyText
+        },
+        ExpressionAttributeNames: {
+            '#a': inColumn
+        },
+        ExpressionAttributeValues: {
+            ':v': foods
+        },
+        UpdateExpression: 'set #a = :v',
+    };
+    docClient.update(params, function (err, data) {
+        if (err) console.log(err);
+        else console.log(data);
+    })
+};
+</script>
 <article>
     <h1></h1>
     <iframe width="426" height="240" src="https://www.youtube.com/embed/n38wfAp_mHw" frameborder="0" allowfullscreen></iframe>

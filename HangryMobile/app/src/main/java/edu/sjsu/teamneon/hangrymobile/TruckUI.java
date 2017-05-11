@@ -87,11 +87,19 @@ public class TruckUI extends AppCompatActivity {
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent =
-                        new Intent(getApplicationContext(), EditTruckProfile.class);
-                intent.putExtra("food_truck_object_info_key", googleAcctNum);
-                startActivity(intent);
+//                Intent intent =
+//                        new Intent(getApplicationContext(), EditTruckProfile.class);
+//                intent.putExtra("food_truck_object_info_key", googleAcctNum);
+//                startActivity(intent);
                 //startActivity(new Intent(TruckUI.this, EditTruckProfile.class));
+
+                String key = getResources().getString(R.string.google_sign_in_account_object_key);
+                Intent isTruckIntent = new Intent();
+                Bundle isTruckBundle = new Bundle();
+                isTruckBundle.putParcelable(key, acct);
+                isTruckIntent.putExtras(isTruckBundle);
+                isTruckIntent.setClass(TruckUI.this, EditTruckProfile.class);
+                startActivity(isTruckIntent);
 
             }
         });

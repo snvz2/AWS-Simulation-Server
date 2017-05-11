@@ -10,23 +10,29 @@ import android.widget.Toast;
 
 import static android.widget.Toast.makeText;
 import android.util.Log;
+
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 public class EditTruckProfile extends AppCompatActivity {
     FoodTruck foodTruck;
-    String googleAcctNum;
+    GoogleSignInAccount acct;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_truck_profile);
+
+        //Intent Bundle
+        final Bundle isTruckBundle = this.getIntent().getExtras();
+        if (isTruckBundle != null) {
+            String key = getResources().getString(R.string.google_sign_in_account_object_key);
+            acct = isTruckBundle.getParcelable(key);
+        }
+
+
         Button btnSubmit = (Button)findViewById(R.id.submit);
 
         final EditText descriptionVal = (EditText) findViewById(R.id.description);
         final EditText truckNameVal = (EditText) findViewById(R.id.truckName1);
-
-        /* Get the food truck instance we passed as a bundle */
-        final Bundle foodTruckBundle = this.getIntent().getExtras();
-        Bundle extras = this.getIntent().getExtras();
-        googleAcctNum = extras.getString("food_truck_object_info_key");
-        Log.wtf("this is google acct", " " + googleAcctNum);
 
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -38,8 +44,8 @@ public class EditTruckProfile extends AppCompatActivity {
                         getApplicationContext(),
                         "Success! Profile Updated", Toast.LENGTH_LONG).show();
                 Log.wtf("SUCESS!! PROFILE UPDATED ", " ");
-                new DynamoCRUD.updateTruckDescription(EditTruckProfile.this).execute(googleAcctNum, des);
-                new DynamoCRUD.updateTruckName(EditTruckProfile.this).execute(googleAcctNum, name);
+                new DynamoCRUD.updateTruckDescription(EditTruckProfile.this).execute(acct.getId(), des);
+                new DynamoCRUD.updateTruckName(EditTruckProfile.this).execute(acct.getId(), name);
 
 
 
